@@ -2,6 +2,8 @@ package main
 
 import (
 	"regexp"
+	"strings"
+	"time"
 
 	"github.com/fabioberger/chrome"
 	. "github.com/siongui/godom"
@@ -9,6 +11,21 @@ import (
 
 func DoRootAction() {
 	println("do root action")
+	articles := Document.QuerySelectorAll("article[role='presentation']")
+	for _, article := range articles {
+		header := article.QuerySelector("header")
+		userElm := header.QuerySelector("a.sqdOP.yWX7d._8A5w5.ZIAjV")
+		username := userElm.InnerHTML()
+
+		codetimeElm := article.QuerySelector("div.k_Q0X.NnvRN")
+		codeElm := codetimeElm.QuerySelector("a")
+		code := strings.TrimPrefix(codeElm.Call("getAttribute", "href").String(), "/p/")
+		code = strings.TrimSuffix(code, "/")
+		timeElm := codetimeElm.QuerySelector("time")
+		time := timeElm.Call("getAttribute", "datetime").String()
+
+		println(username + " " + code + " " + time)
+	}
 }
 
 func DoStoryAction() {
@@ -20,6 +37,7 @@ func DoUserAction() {
 }
 
 func CheckUrlAndDoAction(url string) {
+	println(time.Now().Format(time.RFC3339))
 	if IsRootUrl(url) {
 		DoRootAction()
 	}
@@ -46,19 +64,25 @@ func IsUserUrl(url string) bool {
 	return re.MatchString(url)
 }
 
-func findStoryLink(url string) {
-	sec := Document.QuerySelector("section._8XqED.carul")
-	user := sec.QuerySelector("a.FPmhX.notranslate.R4sSg")
-	println(user.InnerHTML())
-}
-
 func main() {
 	c := chrome.NewChrome()
 
+	// Currently this receiver do nothing meaningful.
+	// Just print received URL.
 	c.Runtime.OnMessage(func(message interface{}, sender chrome.MessageSender, sendResponse func(interface{})) {
 		url := message.(string)
-		CheckUrlAndDoAction(url)
+		//CheckUrlAndDoAction(url)
+		println("Received URL from background: " + url)
 	})
 
-	CheckUrlAndDoAction(Window.Location().Href())
+	ticker := time.NewTicker(500 * time.Millisecond)
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				CheckUrlAndDoAction(Window.Location().Href())
+			}
+		}
+	}()
+
 }
