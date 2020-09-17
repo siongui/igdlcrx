@@ -7,6 +7,30 @@ import (
 	. "github.com/siongui/godom"
 )
 
+func DoRootAction() {
+	println("do root action")
+}
+
+func DoStoryAction() {
+	println("do story action")
+}
+
+func DoUserAction() {
+	println("do user action")
+}
+
+func CheckUrlAndDoAction(url string) {
+	if IsRootUrl(url) {
+		DoRootAction()
+	}
+	if IsStoryUrl(url) {
+		DoStoryAction()
+	}
+	if IsUserUrl(url) {
+		DoUserAction()
+	}
+}
+
 func IsStoryUrl(url string) bool {
 	re := regexp.MustCompile(`^https:\/\/www\.instagram\.com\/stories\/[a-zA-Z_.]+\/\d+\/$`)
 	return re.MatchString(url)
@@ -33,16 +57,8 @@ func main() {
 
 	c.Runtime.OnMessage(func(message interface{}, sender chrome.MessageSender, sendResponse func(interface{})) {
 		url := message.(string)
-		if IsStoryUrl(url) {
-			println("Receive Story URL: " + url)
-		}
-		if IsRootUrl(url) {
-			println("Receive Root URL: " + url)
-		}
-		if IsUserUrl(url) {
-			println("Receive User URL: " + url)
-		}
+		CheckUrlAndDoAction(url)
 	})
 
-	println(Window.Location().Href())
+	CheckUrlAndDoAction(Window.Location().Href())
 }
