@@ -9,6 +9,36 @@ import (
 	. "github.com/siongui/godom"
 )
 
+func GetBestImageUrl(imgs []*Object) string {
+	if len(imgs) != 1 {
+		return ""
+	}
+
+	//src := imgs[0].Call("getAttribute", "src").String()
+	//println("src: " + src)
+	srcset := imgs[0].Call("getAttribute", "srcset").String()
+	//println(srcset)
+	srcs := strings.Split(srcset, ",")
+	bestsrc := srcs[len(srcs)-1]
+	s := strings.Split(bestsrc, " ")[0]
+	println("best src: " + s)
+	return s
+}
+
+func GetVideoUrl(videos []*Object) string {
+	vUrl := ""
+	if len(videos) != 1 {
+		return vUrl
+	}
+
+	for _, source := range videos[0].QuerySelectorAll("source") {
+		vUrl = source.Call("getAttribute", "src").String()
+		println(vUrl)
+	}
+
+	return vUrl
+}
+
 func DoRootAction() {
 	println("do root action")
 	articles := Document.QuerySelectorAll("article[role='presentation']")
@@ -28,16 +58,7 @@ func DoRootAction() {
 
 		mediaElm := article.QuerySelector("div.KL4Bh")
 		imgs := mediaElm.QuerySelectorAll("img")
-		if len(imgs) == 1 {
-			//src := imgs[0].Call("getAttribute", "src").String()
-			//println("src: " + src)
-			srcset := imgs[0].Call("getAttribute", "srcset").String()
-			//println(srcset)
-			srcs := strings.Split(srcset, ",")
-			bestsrc := srcs[len(srcs)-1]
-			s := strings.Split(bestsrc, " ")[0]
-			println("best src: " + s)
-		}
+		GetBestImageUrl(imgs)
 
 		// send code of post to background for download
 		Window.Get("chrome").Get("runtime").Call("sendMessage", code)
@@ -46,6 +67,25 @@ func DoRootAction() {
 
 func DoStoryAction() {
 	println("do story action")
+	sections := Document.QuerySelectorAll("section._8XqED.carul")
+	if len(sections) != 1 {
+		println("cannot find story element: section._8XqED.carul")
+		return
+	}
+
+	userElm := sections[0].QuerySelector("a.FPmhX.notranslate.R4sSg")
+	username := userElm.Call("getAttribute", "title").String()
+	println(username)
+
+	timeElm := sections[0].QuerySelector("time")
+	time := timeElm.Call("getAttribute", "datetime").String()
+	println(time)
+
+	mediaElm := sections[0].QuerySelector("div.qbCDp")
+	imgs := mediaElm.QuerySelectorAll("img")
+	GetBestImageUrl(imgs)
+	videos := mediaElm.QuerySelectorAll("video")
+	GetVideoUrl(videos)
 }
 
 func DoUserAction() {
