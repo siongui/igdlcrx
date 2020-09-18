@@ -38,6 +38,9 @@ func DoRootAction() {
 			s := strings.Split(bestsrc, " ")[0]
 			println("best src: " + s)
 		}
+
+		// send code of post to background for download
+		Window.Get("chrome").Get("runtime").Call("sendMessage", code)
 	}
 }
 
