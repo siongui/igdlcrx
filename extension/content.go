@@ -39,29 +39,33 @@ func GetVideoUrl(videos []*Object) string {
 	return vUrl
 }
 
+func ProcessArticleInRootPath(article *Object) {
+	header := article.QuerySelector("header")
+	userElm := header.QuerySelector("a.sqdOP.yWX7d._8A5w5.ZIAjV")
+	username := userElm.InnerHTML()
+
+	codetimeElm := article.QuerySelector("div.k_Q0X.NnvRN")
+	codeElm := codetimeElm.QuerySelector("a")
+	code := strings.TrimPrefix(codeElm.Call("getAttribute", "href").String(), "/p/")
+	code = strings.TrimSuffix(code, "/")
+	timeElm := codetimeElm.QuerySelector("time")
+	time := timeElm.Call("getAttribute", "datetime").String()
+
+	println(username + " " + code + " " + time)
+
+	mediaElm := article.QuerySelector("div.KL4Bh")
+	imgs := mediaElm.QuerySelectorAll("img")
+	GetBestImageUrl(imgs)
+
+	// send code of post to background for download
+	Window.Get("chrome").Get("runtime").Call("sendMessage", code)
+}
+
 func DoRootAction() {
 	println("do root action")
 	articles := Document.QuerySelectorAll("article[role='presentation']")
 	for _, article := range articles {
-		header := article.QuerySelector("header")
-		userElm := header.QuerySelector("a.sqdOP.yWX7d._8A5w5.ZIAjV")
-		username := userElm.InnerHTML()
-
-		codetimeElm := article.QuerySelector("div.k_Q0X.NnvRN")
-		codeElm := codetimeElm.QuerySelector("a")
-		code := strings.TrimPrefix(codeElm.Call("getAttribute", "href").String(), "/p/")
-		code = strings.TrimSuffix(code, "/")
-		timeElm := codetimeElm.QuerySelector("time")
-		time := timeElm.Call("getAttribute", "datetime").String()
-
-		println(username + " " + code + " " + time)
-
-		mediaElm := article.QuerySelector("div.KL4Bh")
-		imgs := mediaElm.QuerySelectorAll("img")
-		GetBestImageUrl(imgs)
-
-		// send code of post to background for download
-		Window.Get("chrome").Get("runtime").Call("sendMessage", code)
+		ProcessArticleInRootPath(article)
 	}
 }
 
@@ -83,9 +87,18 @@ func DoStoryAction() {
 
 	mediaElm := sections[0].QuerySelector("div.qbCDp")
 	imgs := mediaElm.QuerySelectorAll("img")
-	GetBestImageUrl(imgs)
+	url1 := GetBestImageUrl(imgs)
 	videos := mediaElm.QuerySelectorAll("video")
-	GetVideoUrl(videos)
+	url2 := GetVideoUrl(videos)
+
+	url := ""
+	if url2 == "" {
+		url = url1
+	} else {
+		url = url2
+	}
+	// send code of post to background for download
+	Window.Get("chrome").Get("runtime").Call("sendMessage", url)
 }
 
 func DoUserAction() {
