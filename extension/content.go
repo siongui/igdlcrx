@@ -25,6 +25,19 @@ func DoRootAction() {
 		time := timeElm.Call("getAttribute", "datetime").String()
 
 		println(username + " " + code + " " + time)
+
+		mediaElm := article.QuerySelector("div.KL4Bh")
+		imgs := mediaElm.QuerySelectorAll("img")
+		if len(imgs) == 1 {
+			//src := imgs[0].Call("getAttribute", "src").String()
+			//println("src: " + src)
+			srcset := imgs[0].Call("getAttribute", "srcset").String()
+			//println(srcset)
+			srcs := strings.Split(srcset, ",")
+			bestsrc := srcs[len(srcs)-1]
+			s := strings.Split(bestsrc, " ")[0]
+			println("best src: " + s)
+		}
 	}
 }
 
