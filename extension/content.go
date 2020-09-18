@@ -18,14 +18,15 @@ func GetElementInElement(element *Object, selector string) (elm *Object, ok bool
 	return
 }
 
-func GetBestImageUrl(imgs []*Object) string {
-	if len(imgs) != 1 {
+func GetBestImageUrl(mediaElm *Object) string {
+	img, ok := GetElementInElement(mediaElm, "img")
+	if !ok {
 		return ""
 	}
 
-	//src := imgs[0].Call("getAttribute", "src").String()
+	//src := img.Call("getAttribute", "src").String()
 	//println("src: " + src)
-	srcset := imgs[0].Call("getAttribute", "srcset").String()
+	srcset := img.Call("getAttribute", "srcset").String()
 	//println(srcset)
 	srcs := strings.Split(srcset, ",")
 	bestsrc := srcs[len(srcs)-1]
@@ -82,8 +83,7 @@ func ProcessArticleInRootPath(article *Object) {
 	if !ok {
 		return
 	}
-	imgs := mediaElm.QuerySelectorAll("img")
-	GetBestImageUrl(imgs)
+	GetBestImageUrl(mediaElm)
 
 	// send code of post to background for download
 	Chrome.Runtime.Call("sendMessage", code)
@@ -99,23 +99,30 @@ func DoRootAction() {
 
 func DoStoryAction() {
 	println("do story action")
-	sections := Document.QuerySelectorAll("section._8XqED.carul")
-	if len(sections) != 1 {
-		println("cannot find story element: section._8XqED.carul")
+	section, ok := GetElementInElement(Document, "section._8XqED.carul")
+	if !ok {
 		return
 	}
 
-	userElm := sections[0].QuerySelector("a.FPmhX.notranslate.R4sSg")
+	userElm, ok := GetElementInElement(section, "a.FPmhX.notranslate.R4sSg")
+	if !ok {
+		return
+	}
 	username := userElm.Call("getAttribute", "title").String()
 	println(username)
 
-	timeElm := sections[0].QuerySelector("time")
+	timeElm, ok := GetElementInElement(section, "time")
+	if !ok {
+		return
+	}
 	time := timeElm.Call("getAttribute", "datetime").String()
 	println(time)
 
-	mediaElm := sections[0].QuerySelector("div.qbCDp")
-	imgs := mediaElm.QuerySelectorAll("img")
-	url1 := GetBestImageUrl(imgs)
+	mediaElm, ok := GetElementInElement(section, "div.qbCDp")
+	if !ok {
+		return
+	}
+	url1 := GetBestImageUrl(mediaElm)
 	videos := mediaElm.QuerySelectorAll("video")
 	url2 := GetVideoUrl(videos)
 
