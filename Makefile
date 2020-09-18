@@ -14,8 +14,8 @@ build: fmt
 	@echo "\033[92mCompiling Go to JavaScript ...\033[0m"
 	[ -d $(CRXDIR) ] || mkdir -p $(CRXDIR)
 	cp extension/manifest.json $(CRXDIR)
-	gopherjs build extension/background.go -o $(CRXDIR)/background.js
-	gopherjs build extension/content.go -o $(CRXDIR)/content.js
+	gopherjs build extension/background.go extension/chrome.go -o $(CRXDIR)/background.js
+	gopherjs build extension/content.go extension/chrome.go -o $(CRXDIR)/content.js
 
 pack: build
 	cd $(CRXDIR); zip -r extension.zip .

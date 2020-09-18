@@ -5,7 +5,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/fabioberger/chrome"
 	. "github.com/siongui/godom"
 )
 
@@ -58,7 +57,7 @@ func ProcessArticleInRootPath(article *Object) {
 	GetBestImageUrl(imgs)
 
 	// send code of post to background for download
-	Window.Get("chrome").Get("runtime").Call("sendMessage", code)
+	Chrome.Runtime.Call("sendMessage", code)
 }
 
 func DoRootAction() {
@@ -134,11 +133,9 @@ func IsUserUrl(url string) bool {
 }
 
 func main() {
-	c := chrome.NewChrome()
-
 	// Currently this receiver do nothing meaningful.
 	// Just print received URL.
-	c.Runtime.OnMessage(func(message interface{}, sender chrome.MessageSender, sendResponse func(interface{})) {
+	Chrome.Runtime.Get("onMessage").Call("addListener", func(message interface{}) {
 		url := message.(string)
 		//CheckUrlAndDoAction(url)
 		println("Received URL from background: " + url)
