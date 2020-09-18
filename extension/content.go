@@ -35,7 +35,9 @@ func GetBestImageUrl(mediaElm *Object) string {
 	return s
 }
 
-func GetVideoUrl(videos []*Object) string {
+func GetVideoUrl(mediaElm *Object) string {
+	videos := mediaElm.QuerySelectorAll("video")
+
 	vUrl := ""
 	if len(videos) != 1 {
 		return vUrl
@@ -123,8 +125,7 @@ func DoStoryAction() {
 		return
 	}
 	url1 := GetBestImageUrl(mediaElm)
-	videos := mediaElm.QuerySelectorAll("video")
-	url2 := GetVideoUrl(videos)
+	url2 := GetVideoUrl(mediaElm)
 
 	url := ""
 	if url2 == "" {
