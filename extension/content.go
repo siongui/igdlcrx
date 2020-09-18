@@ -8,6 +8,16 @@ import (
 	. "github.com/siongui/godom"
 )
 
+func GetElementInElement(element *Object, selector string) (elm *Object, ok bool) {
+	elms := element.QuerySelectorAll(selector)
+	if len(elms) == 1 {
+		elm = elms[0]
+		ok = true
+		return
+	}
+	return
+}
+
 func GetBestImageUrl(imgs []*Object) string {
 	if len(imgs) != 1 {
 		return ""
@@ -39,20 +49,39 @@ func GetVideoUrl(videos []*Object) string {
 }
 
 func ProcessArticleInRootPath(article *Object) {
-	header := article.QuerySelector("header")
-	userElm := header.QuerySelector("a.sqdOP.yWX7d._8A5w5.ZIAjV")
+	header, ok := GetElementInElement(article, "header")
+	if !ok {
+		return
+	}
+	userElm, ok := GetElementInElement(header, "a.sqdOP.yWX7d._8A5w5.ZIAjV")
+	if !ok {
+		return
+	}
 	username := userElm.InnerHTML()
 
-	codetimeElm := article.QuerySelector("div.k_Q0X.NnvRN")
-	codeElm := codetimeElm.QuerySelector("a")
+	codetimeElm, ok := GetElementInElement(article, "div.k_Q0X.NnvRN")
+	if !ok {
+		return
+	}
+	codeElm, ok := GetElementInElement(codetimeElm, "a")
+	if !ok {
+		return
+	}
 	code := strings.TrimPrefix(codeElm.Call("getAttribute", "href").String(), "/p/")
 	code = strings.TrimSuffix(code, "/")
-	timeElm := codetimeElm.QuerySelector("time")
+
+	timeElm, ok := GetElementInElement(codetimeElm, "time")
+	if !ok {
+		return
+	}
 	time := timeElm.Call("getAttribute", "datetime").String()
 
 	println(username + " " + code + " " + time)
 
-	mediaElm := article.QuerySelector("div.KL4Bh")
+	mediaElm, ok := GetElementInElement(article, "div.KL4Bh")
+	if !ok {
+		return
+	}
 	imgs := mediaElm.QuerySelectorAll("img")
 	GetBestImageUrl(imgs)
 
