@@ -1,0 +1,13 @@
+.download-btn {
+    position: absolute;
+    z-index: 50;
+    line-height: 1.2;
+    top: 1.5%;
+    right: 10%;
+    font-weight: 900;
+    opacity: 0.7;
+    cursor: pointer;
+    align-items: center;
+    padding: .3rem;
+    border-radius: .5rem;
+}

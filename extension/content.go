@@ -52,6 +52,10 @@ func GetVideoUrl(mediaElm *Object) string {
 }
 
 func ProcessArticleInRootPath(article *Object) {
+	btns := article.QuerySelectorAll(".download-btn")
+	if len(btns) > 0 {
+		return
+	}
 	/*
 		header, ok := GetElementInElement(article, "header")
 		if !ok {
@@ -95,7 +99,13 @@ func ProcessArticleInRootPath(article *Object) {
 	*/
 
 	// send code of post to background for download
-	Chrome.Runtime.Call("sendMessage", code)
+	//Chrome.Runtime.Call("sendMessage", code)
+
+	btn := Document.CreateElement("button")
+	btn.Dataset().Set("dataCode", code)
+	btn.ClassList().Add("download-btn")
+	btn.SetInnerHTML("Download")
+	article.Call("prepend", btn)
 }
 
 func DoRootAction() {
