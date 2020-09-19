@@ -119,8 +119,14 @@ func DoRootAction() {
 
 func DoStoryAction() {
 	println("do story action")
+
 	section, ok := GetElementInElement(Document, "section._8XqED.carul")
 	if !ok {
+		return
+	}
+
+	btns := section.QuerySelectorAll(".download-story-btn")
+	if len(btns) > 0 {
 		return
 	}
 
@@ -155,8 +161,20 @@ func DoStoryAction() {
 	} else {
 		url = url2
 	}
-	// send code of post to background for download
-	Chrome.Runtime.Call("sendMessage", url)
+
+	btn := Document.CreateElement("button")
+	btn.Dataset().Set("dataUrl", url)
+	btn.ClassList().Add("download-story-btn")
+	btn.SetInnerHTML("Download")
+	btn.AddEventListener("click", func(e Event) {
+		// send code of post to background for download
+		Chrome.Runtime.Call("sendMessage", "storyurl:"+url)
+	})
+	controlElm, ok := GetElementInElement(section, "div.GHEPc")
+	if !ok {
+		return
+	}
+	controlElm.AppendChild(btn)
 }
 
 func DoUserAction() {
