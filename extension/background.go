@@ -1,8 +1,44 @@
 package main
 
 import (
+	"net/url"
+	"strconv"
 	"strings"
+	"time"
 )
+
+// StripQueryString removes query string in the URL
+func StripQueryString(inputUrl string) (su string, err error) {
+	u, err := url.Parse(inputUrl)
+	if err != nil {
+		return
+	}
+	u.RawQuery = ""
+	su = u.String()
+	return
+}
+
+func GetStoryFilenameUrl(storyinfo string) (filename, url string) {
+	sss := strings.Split(storyinfo, ",")
+	if len(sss) != 3 {
+		return
+	}
+	url = sss[2]
+
+	urlnoq, err := StripQueryString(url)
+	if err != nil {
+		return
+	}
+	eee := strings.Split(urlnoq, ".")
+	ext := eee[len(eee)-1]
+
+	timestamp := sss[1]
+	t, _ := time.Parse(time.RFC3339, timestamp)
+	loc := time.FixedZone("UTC+8", +8*60*60)
+
+	filename = sss[0] + "-" + t.In(loc).Format("2006-01-02T15-04-05") + "-" + strconv.FormatInt(t.Unix(), 10) + "." + ext
+	return
+}
 
 func main() {
 	// Currently do nothing meaningful
@@ -33,6 +69,18 @@ func main() {
 			createProperties := make(map[string]string)
 			createProperties["url"] = "https://www.instagram.com/p/" + code + "/"
 			Chrome.Tabs.Call("create", createProperties)
+			return
+		}
+		if strings.HasPrefix(msg, "storyinfo:") {
+			storyinfo := strings.TrimPrefix(msg, "storyinfo:")
+			options := make(map[string]string)
+			filename, url := GetStoryFilenameUrl(storyinfo)
+			options["url"] = url
+			options["filename"] = filename
+			//println(filename)
+			//println(url)
+			Chrome.Downloads.Call("download", options)
+			return
 		}
 		println("Received msg from content: " + msg)
 	})

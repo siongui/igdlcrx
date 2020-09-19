@@ -130,23 +130,19 @@ func DoStoryAction() {
 		return
 	}
 
-	/*
-		userElm, ok := GetElementInElement(section, "a.FPmhX.notranslate.R4sSg")
-		if !ok {
-			return
-		}
-		username := userElm.Call("getAttribute", "title").String()
-		println(username)
-	*/
+	userElm, ok := GetElementInElement(section, "a.FPmhX.notranslate.R4sSg")
+	if !ok {
+		return
+	}
+	username := userElm.Call("getAttribute", "title").String()
+	//println(username)
 
-	/*
-		timeElm, ok := GetElementInElement(section, "time")
-		if !ok {
-			return
-		}
-		time := timeElm.Call("getAttribute", "datetime").String()
-		println(time)
-	*/
+	timeElm, ok := GetElementInElement(section, "time")
+	if !ok {
+		return
+	}
+	time := timeElm.Call("getAttribute", "datetime").String()
+	//println(time)
 
 	mediaElm, ok := GetElementInElement(section, "div.qbCDp")
 	if !ok {
@@ -168,7 +164,7 @@ func DoStoryAction() {
 	btn.SetInnerHTML("Download")
 	btn.AddEventListener("click", func(e Event) {
 		// send code of post to background for download
-		Chrome.Runtime.Call("sendMessage", "storyurl:"+url)
+		Chrome.Runtime.Call("sendMessage", "storyinfo:"+username+","+time+","+url)
 	})
 	controlElm, ok := GetElementInElement(section, "div.GHEPc")
 	if !ok {

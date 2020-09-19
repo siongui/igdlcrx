@@ -21,6 +21,7 @@
 
   "permissions": [
     "https://www.instagram.com/*",
+    "downloads",
     "tabs"
   ]
 }
