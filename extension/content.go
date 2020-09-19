@@ -43,8 +43,11 @@ func GetVideoUrl(mediaElm *Object) string {
 		return vUrl
 	}
 
-	for _, source := range videos[0].QuerySelectorAll("source") {
+	for i, source := range videos[0].QuerySelectorAll("source") {
 		vUrl = source.Call("getAttribute", "src").String()
+		if i == 0 {
+			break
+		}
 		//println(vUrl)
 	}
 
