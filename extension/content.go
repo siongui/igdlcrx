@@ -52,7 +52,7 @@ func GetVideoUrl(mediaElm *Object) string {
 }
 
 func ProcessArticleInRootPath(article *Object) {
-	btns := article.QuerySelectorAll(".download-btn")
+	btns := article.QuerySelectorAll(".download-timeline-post-btn")
 	if len(btns) > 0 {
 		return
 	}
@@ -100,7 +100,7 @@ func ProcessArticleInRootPath(article *Object) {
 
 	btn := Document.CreateElement("button")
 	btn.Dataset().Set("dataCode", code)
-	btn.ClassList().Add("download-btn")
+	btn.ClassList().Add("download-timeline-post-btn")
 	btn.SetInnerHTML("Download")
 	btn.AddEventListener("click", func(e Event) {
 		// send code of post to background for download
