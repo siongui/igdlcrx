@@ -31,7 +31,7 @@ func GetBestImageUrl(mediaElm *Object) string {
 	srcs := strings.Split(srcset, ",")
 	bestsrc := srcs[len(srcs)-1]
 	s := strings.Split(bestsrc, " ")[0]
-	println("best src: " + s)
+	//println("best src: " + s)
 	return s
 }
 
@@ -45,22 +45,26 @@ func GetVideoUrl(mediaElm *Object) string {
 
 	for _, source := range videos[0].QuerySelectorAll("source") {
 		vUrl = source.Call("getAttribute", "src").String()
-		println(vUrl)
+		//println(vUrl)
 	}
 
 	return vUrl
 }
 
 func ProcessArticleInRootPath(article *Object) {
-	header, ok := GetElementInElement(article, "header")
-	if !ok {
-		return
-	}
-	userElm, ok := GetElementInElement(header, "a.sqdOP.yWX7d._8A5w5.ZIAjV")
-	if !ok {
-		return
-	}
-	username := userElm.InnerHTML()
+	/*
+		header, ok := GetElementInElement(article, "header")
+		if !ok {
+			return
+		}
+
+
+			userElm, ok := GetElementInElement(header, "a.sqdOP.yWX7d._8A5w5.ZIAjV")
+			if !ok {
+				return
+			}
+			username := userElm.InnerHTML()
+	*/
 
 	codetimeElm, ok := GetElementInElement(article, "div.k_Q0X.NnvRN")
 	if !ok {
@@ -73,19 +77,22 @@ func ProcessArticleInRootPath(article *Object) {
 	code := strings.TrimPrefix(codeElm.Call("getAttribute", "href").String(), "/p/")
 	code = strings.TrimSuffix(code, "/")
 
-	timeElm, ok := GetElementInElement(codetimeElm, "time")
-	if !ok {
-		return
-	}
-	time := timeElm.Call("getAttribute", "datetime").String()
+	/*
+			timeElm, ok := GetElementInElement(codetimeElm, "time")
+			if !ok {
+				return
+			}
+			time := timeElm.Call("getAttribute", "datetime").String()
+			println(username + " " + code + " " + time)
 
-	println(username + " " + code + " " + time)
 
-	mediaElm, ok := GetElementInElement(article, "div.KL4Bh")
-	if !ok {
-		return
-	}
-	GetBestImageUrl(mediaElm)
+		mediaElm, ok := GetElementInElement(article, "div.KL4Bh")
+		if !ok {
+			return
+		}
+		GetBestImageUrl(mediaElm)
+		// TODO: how to check if video in post?
+	*/
 
 	// send code of post to background for download
 	Chrome.Runtime.Call("sendMessage", code)
@@ -106,19 +113,23 @@ func DoStoryAction() {
 		return
 	}
 
-	userElm, ok := GetElementInElement(section, "a.FPmhX.notranslate.R4sSg")
-	if !ok {
-		return
-	}
-	username := userElm.Call("getAttribute", "title").String()
-	println(username)
+	/*
+		userElm, ok := GetElementInElement(section, "a.FPmhX.notranslate.R4sSg")
+		if !ok {
+			return
+		}
+		username := userElm.Call("getAttribute", "title").String()
+		println(username)
+	*/
 
-	timeElm, ok := GetElementInElement(section, "time")
-	if !ok {
-		return
-	}
-	time := timeElm.Call("getAttribute", "datetime").String()
-	println(time)
+	/*
+		timeElm, ok := GetElementInElement(section, "time")
+		if !ok {
+			return
+		}
+		time := timeElm.Call("getAttribute", "datetime").String()
+		println(time)
+	*/
 
 	mediaElm, ok := GetElementInElement(section, "div.qbCDp")
 	if !ok {
@@ -134,7 +145,7 @@ func DoStoryAction() {
 		url = url2
 	}
 	// send code of post to background for download
-	Window.Get("chrome").Get("runtime").Call("sendMessage", url)
+	Chrome.Runtime.Call("sendMessage", url)
 }
 
 func DoUserAction() {
@@ -142,7 +153,7 @@ func DoUserAction() {
 }
 
 func CheckUrlAndDoAction(url string) {
-	println(time.Now().Format(time.RFC3339))
+	//println(time.Now().Format(time.RFC3339))
 	if IsRootUrl(url) {
 		DoRootAction()
 	}
