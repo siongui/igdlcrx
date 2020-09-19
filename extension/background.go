@@ -36,7 +36,9 @@ func GetStoryFilenameUrl(storyinfo string) (filename, url string) {
 	t, _ := time.Parse(time.RFC3339, timestamp)
 	loc := time.FixedZone("UTC+8", +8*60*60)
 
-	filename = sss[0] + "-" + t.In(loc).Format("2006-01-02T15-04-05") + "-" + strconv.FormatInt(t.Unix(), 10) + "." + ext
+	filename = sss[0] + "-story-" + t.In(loc).Format(time.RFC3339) + "-" + strconv.FormatInt(t.Unix(), 10) + "." + ext
+	// chrome.downloads does not allow ":" in filename
+	filename = strings.Replace(filename, ":", "-", -1)
 	return
 }
 
