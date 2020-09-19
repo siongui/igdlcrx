@@ -98,13 +98,14 @@ func ProcessArticleInRootPath(article *Object) {
 		// TODO: how to check if video in post?
 	*/
 
-	// send code of post to background for download
-	//Chrome.Runtime.Call("sendMessage", code)
-
 	btn := Document.CreateElement("button")
 	btn.Dataset().Set("dataCode", code)
 	btn.ClassList().Add("download-btn")
 	btn.SetInnerHTML("Download")
+	btn.AddEventListener("click", func(e Event) {
+		// send code of post to background for download
+		Chrome.Runtime.Call("sendMessage", "postcode:"+code)
+	})
 	article.Call("prepend", btn)
 }
 
@@ -208,5 +209,4 @@ func main() {
 			}
 		}
 	}()
-
 }
