@@ -31,12 +31,22 @@ func GetBestImageUrl(mediaElm *Object) string {
 
 	//src := img.Call("getAttribute", "src").String()
 	//println("src: " + src)
-	srcset := img.Call("getAttribute", "srcset").String()
+	ssElm := img.Call("getAttribute", "srcset")
+	if ssElm == nil {
+		if debug {
+			println("cannot get srcset in GetBestImageUrl")
+		}
+		return ""
+	}
+	srcset := ssElm.String()
 	//println(srcset)
 	srcs := strings.Split(srcset, ",")
+	if len(srcs) == 0 {
+		return ""
+	}
 	bestsrc := srcs[len(srcs)-1]
 	s := strings.Split(bestsrc, " ")[0]
-	//println("best src: " + s)
+	println("best src: " + s)
 	return s
 }
 
@@ -56,6 +66,7 @@ func GetVideoUrl(mediaElm *Object) string {
 		//println(vUrl)
 	}
 
+	println("video url: " + vUrl)
 	return vUrl
 }
 
@@ -126,7 +137,7 @@ func DoRootAction() {
 }
 
 func DoStoryAction() {
-	println("do story action")
+	//println("do story action")
 
 	section, ok := GetElementInElement(Document, "section._8XqED.carul")
 	if !ok {
@@ -190,6 +201,7 @@ func DoStoryAction() {
 		}
 		return
 	}
+
 	if debug {
 		println("story url: " + url)
 	}
