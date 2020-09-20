@@ -29,24 +29,26 @@ func GetBestImageUrl(mediaElm *Object) string {
 		return ""
 	}
 
-	//src := img.Call("getAttribute", "src").String()
-	//println("src: " + src)
-	ssElm := img.Call("getAttribute", "srcset")
-	if ssElm == nil {
+	if !img.HasAttribute("srcset") {
 		if debug {
-			println("cannot get srcset in GetBestImageUrl")
+			println("cannot find img srcset attribute in GetBestImageUrl")
 		}
 		return ""
 	}
-	srcset := ssElm.String()
-	//println(srcset)
+
+	srcset := img.GetAttribute("srcset")
+	if debug {
+		println(srcset)
+	}
 	srcs := strings.Split(srcset, ",")
 	if len(srcs) == 0 {
 		return ""
 	}
 	bestsrc := srcs[len(srcs)-1]
 	s := strings.Split(bestsrc, " ")[0]
-	println("best src: " + s)
+	if debug {
+		println("best src: " + s)
+	}
 	return s
 }
 
@@ -59,14 +61,24 @@ func GetVideoUrl(mediaElm *Object) string {
 	}
 
 	for i, source := range videos[0].QuerySelectorAll("source") {
-		vUrl = source.Call("getAttribute", "src").String()
+		if !source.HasAttribute("src") {
+			if debug {
+				println("video source src attr not exist")
+			}
+			return ""
+		}
+		vUrl = source.GetAttribute("src")
+		if debug {
+			println(vUrl)
+		}
 		if i == 0 {
 			break
 		}
-		//println(vUrl)
 	}
 
-	println("video url: " + vUrl)
+	if debug {
+		println("video url: " + vUrl)
+	}
 	return vUrl
 }
 
@@ -97,7 +109,10 @@ func ProcessArticleInRootPath(article *Object) {
 	if !ok {
 		return
 	}
-	code := strings.TrimPrefix(codeElm.Call("getAttribute", "href").String(), "/p/")
+	if !codeElm.HasAttribute("href") {
+		return
+	}
+	code := strings.TrimPrefix(codeElm.GetAttribute("href"), "/p/")
 	code = strings.TrimSuffix(code, "/")
 
 	/*
@@ -162,7 +177,14 @@ func DoStoryAction() {
 		}
 		return
 	}
-	username := userElm.Call("getAttribute", "title").String()
+
+	if !userElm.HasAttribute("title") {
+		if debug {
+			println("cannot find userElm title attribute in DoStoryAction")
+		}
+		return
+	}
+	username := userElm.GetAttribute("title")
 	if debug {
 		println("story username: " + username)
 	}
@@ -174,9 +196,17 @@ func DoStoryAction() {
 		}
 		return
 	}
-	time := timeElm.Call("getAttribute", "datetime").String()
+
+	if !timeElm.HasAttribute("datetime") {
+		if debug {
+			println("cannot find timeElm datetime attribute in DoStoryAction")
+		}
+		return
+	}
+
+	timestamp := timeElm.GetAttribute("datetime")
 	if debug {
-		println("story timestamp: " + time)
+		println("story timestamp: " + timestamp)
 	}
 
 	mediaElm, ok := GetElementInElement(section, "div.qbCDp")
@@ -212,7 +242,7 @@ func DoStoryAction() {
 	btn.SetInnerHTML("Download")
 	btn.AddEventListener("click", func(e Event) {
 		// send code of post to background for download
-		Chrome.Runtime.Call("sendMessage", "storyinfo:"+username+","+time+","+url)
+		Chrome.Runtime.Call("sendMessage", "storyinfo:"+username+","+timestamp+","+url)
 	})
 	controlElm, ok := GetElementInElement(section, "div.GHEPc")
 	if !ok {
