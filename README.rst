@@ -29,6 +29,9 @@ Tested on:
   - `Ubuntu 20.04`_
   - `Go 1.12.17`_
 
+Download extension.zip_ and install the extracted directory using
+`chrome extension developer mode`_.
+
 
 UNLICENSE
 +++++++++
@@ -52,4 +55,6 @@ References
 .. _GopherJS: http://www.gopherjs.org/
 .. _Ubuntu 20.04: https://releases.ubuntu.com/20.04/
 .. _Go 1.12.17: https://golang.org/dl/
+.. _extension.zip: https://siongui.github.io/igdlcrx/extension.zip
+.. _chrome extension developer mode: https://www.google.com/search?q=chrome+extension+developer+mode
 .. _UNLICENSE: https://unlicense.org/
