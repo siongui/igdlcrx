@@ -8,25 +8,45 @@ import (
 	"github.com/siongui/instago"
 )
 
-func GetStoryFilenameUrl(storyinfo string) (filename, url string) {
-	sss := strings.Split(storyinfo, ",")
-	if len(sss) != 3 {
-		return
-	}
-	url = sss[2]
+var usernameId map[string]string
 
-	urlnoq, err := instago.StripQueryString(url)
-	if err != nil {
-		return
-	}
+func GetStoryExt(mediaUrl string) string {
+	urlnoq, _ := instago.StripQueryString(mediaUrl)
 	eee := strings.Split(urlnoq, ".")
-	ext := eee[len(eee)-1]
+	return eee[len(eee)-1]
+}
 
-	timestamp := sss[1]
+func GetTimeStr(timestamp string) string {
 	t, _ := time.Parse(time.RFC3339, timestamp)
 	loc := time.FixedZone("UTC+8", +8*60*60)
+	return t.In(loc).Format(time.RFC3339) + "-" + strconv.FormatInt(t.Unix(), 10)
+}
 
-	filename = sss[0] + "-story-" + t.In(loc).Format(time.RFC3339) + "-" + strconv.FormatInt(t.Unix(), 10) + "." + ext
+func GetStoryFilenameUrl(storyinfo string) (filename, mediaUrl string) {
+	sss := strings.Split(storyinfo, ",")
+	if len(sss) != 4 {
+		return
+	}
+	username := sss[0]
+	timestamp := sss[1]
+	mediaUrl = sss[2]
+	storyurl := sss[3]
+
+	id, ok := usernameId[username]
+	if !ok {
+		id2, err := GetId(storyurl)
+		if err == nil {
+			id = id2
+			usernameId[username] = id
+		} else {
+			println(err.Error())
+			id = ""
+		}
+	}
+
+	ext := GetStoryExt(mediaUrl)
+
+	filename = username + "-" + id + "-story-" + GetTimeStr(timestamp) + "." + ext
 	// chrome.downloads does not allow ":" in filename
 	filename = strings.Replace(filename, ":", "-", -1)
 	return
@@ -41,7 +61,19 @@ func DownloadPost(code string) {
 	println(em)
 }
 
+func DownloadStory(storyinfo string) {
+	options := make(map[string]string)
+	filename, url := GetStoryFilenameUrl(storyinfo)
+	options["url"] = url
+	options["filename"] = filename
+	//println(filename)
+	//println(url)
+	Chrome.Downloads.Call("download", options)
+}
+
 func main() {
+	usernameId = make(map[string]string)
+
 	// Currently do nothing meaningful
 	Chrome.Tabs.Get("onUpdated").Call("addListener", func(tabId int, changeInfo map[string]interface{}) {
 		if _, ok := changeInfo["url"]; !ok {
@@ -77,13 +109,7 @@ func main() {
 		}
 		if strings.HasPrefix(msg, "storyinfo:") {
 			storyinfo := strings.TrimPrefix(msg, "storyinfo:")
-			options := make(map[string]string)
-			filename, url := GetStoryFilenameUrl(storyinfo)
-			options["url"] = url
-			options["filename"] = filename
-			//println(filename)
-			//println(url)
-			Chrome.Downloads.Call("download", options)
+			go DownloadStory(storyinfo)
 			return
 		}
 		println("Received msg from content: " + msg)

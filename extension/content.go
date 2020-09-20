@@ -219,30 +219,30 @@ func DoStoryAction() {
 	url1 := GetBestImageUrl(mediaElm)
 	url2 := GetVideoUrl(mediaElm)
 
-	url := ""
+	mediaUrl := ""
 	if url2 == "" {
-		url = url1
+		mediaUrl = url1
 	} else {
-		url = url2
+		mediaUrl = url2
 	}
-	if url == "" {
+	if mediaUrl == "" {
 		if debug {
-			println("url is empty string in DoStoryAction")
+			println("mediaUrl is empty string in DoStoryAction")
 		}
 		return
 	}
 
 	if debug {
-		println("story url: " + url)
+		println("story mediaUrl: " + mediaUrl)
 	}
 
 	btn := Document.CreateElement("button")
-	btn.Dataset().Set("dataUrl", url)
+	btn.Dataset().Set("dataMediaUrl", mediaUrl)
 	btn.ClassList().Add("download-story-btn")
 	btn.SetInnerHTML("Download")
 	btn.AddEventListener("click", func(e Event) {
 		// send code of post to background for download
-		Chrome.Runtime.Call("sendMessage", "storyinfo:"+username+","+timestamp+","+url)
+		Chrome.Runtime.Call("sendMessage", "storyinfo:"+username+","+timestamp+","+mediaUrl+","+Window.Location().Href())
 	})
 	controlElm, ok := GetElementInElement(section, "div.GHEPc")
 	if !ok {
