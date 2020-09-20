@@ -7,7 +7,7 @@ export GOPATH=$(realpath ../paligo)
 export PATH := $(GOROOT)/bin:$(GOPATH)/bin:$(PATH)
 endif
 
-CRXDIR=crx
+CRXDIR=$(CURDIR)/crx
 ZIPFILE=$(CRXDIR)/extension.zip
 
 build: fmt
@@ -15,8 +15,8 @@ build: fmt
 	[ -d $(CRXDIR) ] || mkdir -p $(CRXDIR)
 	cp extension/manifest.json $(CRXDIR)
 	cp extension/style.css $(CRXDIR)
-	gopherjs build extension/background.go extension/chrome.go -o $(CRXDIR)/background.js
-	gopherjs build extension/content.go extension/chrome.go -o $(CRXDIR)/content.js
+	cd extension; gopherjs build background.go chrome.go libpost.go -o $(CRXDIR)/background.js
+	cd extension; gopherjs build content.go chrome.go -o $(CRXDIR)/content.js
 
 pack: build
 	cd $(CRXDIR); zip -r extension.zip .

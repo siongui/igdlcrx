@@ -42,6 +42,15 @@ func GetStoryFilenameUrl(storyinfo string) (filename, url string) {
 	return
 }
 
+func DownloadPost(code string) {
+	em, err := GetPostInfo(code)
+	if err != nil {
+		println(err.Error())
+		return
+	}
+	println(em)
+}
+
 func main() {
 	// Currently do nothing meaningful
 	Chrome.Tabs.Get("onUpdated").Call("addListener", func(tabId int, changeInfo map[string]interface{}) {
@@ -68,9 +77,12 @@ func main() {
 		msg := message.(string)
 		if strings.HasPrefix(msg, "postcode:") {
 			code := strings.TrimPrefix(msg, "postcode:")
-			createProperties := make(map[string]string)
-			createProperties["url"] = "https://www.instagram.com/p/" + code + "/"
-			Chrome.Tabs.Call("create", createProperties)
+			/*
+				createProperties := make(map[string]string)
+				createProperties["url"] = "https://www.instagram.com/p/" + code + "/"
+				Chrome.Tabs.Call("create", createProperties)
+			*/
+			go DownloadPost(code)
 			return
 		}
 		if strings.HasPrefix(msg, "storyinfo:") {
