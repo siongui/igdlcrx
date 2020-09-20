@@ -1,0 +1,15 @@
+dist: focal
+language: go
+go:
+  - 1.12.17
+install:
+  - make install
+script:
+  - make pack
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  local_dir: crx
+  on:
+    branch: master
