@@ -27,7 +27,7 @@ written in Go_, compiled to JavaScript via GopherJS_.
 Tested on:
 
   - `Ubuntu 20.04`_
-  - `Go 1.12.9`_
+  - `Go 1.12.17`_
 
 
 UNLICENSE
@@ -51,5 +51,5 @@ References
 .. _JavaScript: https://www.google.com/search?q=JavaScript
 .. _GopherJS: http://www.gopherjs.org/
 .. _Ubuntu 20.04: https://releases.ubuntu.com/20.04/
-.. _Go 1.12.9: https://golang.org/dl/
+.. _Go 1.12.17: https://golang.org/dl/
 .. _UNLICENSE: https://unlicense.org/

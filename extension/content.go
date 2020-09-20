@@ -8,6 +8,8 @@ import (
 	. "github.com/siongui/godom"
 )
 
+var debug = true
+
 func GetElementInElement(element *Object, selector string) (elm *Object, ok bool) {
 	elms := element.QuerySelectorAll(selector)
 	if len(elms) == 1 {
@@ -21,6 +23,9 @@ func GetElementInElement(element *Object, selector string) (elm *Object, ok bool
 func GetBestImageUrl(mediaElm *Object) string {
 	img, ok := GetElementInElement(mediaElm, "img")
 	if !ok {
+		if debug {
+			println("cannot find img element in GetBestImageUrl")
+		}
 		return ""
 	}
 
@@ -125,30 +130,49 @@ func DoStoryAction() {
 
 	section, ok := GetElementInElement(Document, "section._8XqED.carul")
 	if !ok {
+		if debug {
+			println("cannot find section in DoStoryAction")
+		}
 		return
 	}
 
 	btns := section.QuerySelectorAll(".download-story-btn")
 	if len(btns) > 0 {
+		if debug {
+			println("story download button exist. exit.")
+		}
 		return
 	}
 
 	userElm, ok := GetElementInElement(section, "a.FPmhX.notranslate.R4sSg")
 	if !ok {
+		if debug {
+			println("cannot find userElm in DoStoryAction")
+		}
 		return
 	}
 	username := userElm.Call("getAttribute", "title").String()
-	//println(username)
+	if debug {
+		println("story username: " + username)
+	}
 
 	timeElm, ok := GetElementInElement(section, "time")
 	if !ok {
+		if debug {
+			println("cannot find timeElm in DoStoryAction")
+		}
 		return
 	}
 	time := timeElm.Call("getAttribute", "datetime").String()
-	//println(time)
+	if debug {
+		println("story timestamp: " + time)
+	}
 
 	mediaElm, ok := GetElementInElement(section, "div.qbCDp")
 	if !ok {
+		if debug {
+			println("cannot find mediaElm in DoStoryAction")
+		}
 		return
 	}
 	url1 := GetBestImageUrl(mediaElm)
@@ -159,6 +183,9 @@ func DoStoryAction() {
 		url = url1
 	} else {
 		url = url2
+	}
+	if debug {
+		println("story url: " + url)
 	}
 
 	btn := Document.CreateElement("button")
@@ -194,7 +221,7 @@ func CheckUrlAndDoAction(url string) {
 }
 
 func IsStoryUrl(url string) bool {
-	re := regexp.MustCompile(`^https:\/\/www\.instagram\.com\/stories\/[a-zA-Z_.]+\/\d+\/$`)
+	re := regexp.MustCompile(`^https:\/\/www\.instagram\.com\/stories\/[a-zA-Z\d_.]+\/\d+\/$`)
 	return re.MatchString(url)
 }
 
@@ -204,7 +231,7 @@ func IsRootUrl(url string) bool {
 }
 
 func IsUserUrl(url string) bool {
-	re := regexp.MustCompile(`^https:\/\/www\.instagram\.com\/[a-zA-Z_.]+\/$`)
+	re := regexp.MustCompile(`^https:\/\/www\.instagram\.com\/[a-zA-Z\d_.]+\/$`)
 	return re.MatchString(url)
 }
 
