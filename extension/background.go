@@ -1,22 +1,12 @@
 package main
 
 import (
-	"net/url"
 	"strconv"
 	"strings"
 	"time"
-)
 
-// StripQueryString removes query string in the URL
-func StripQueryString(inputUrl string) (su string, err error) {
-	u, err := url.Parse(inputUrl)
-	if err != nil {
-		return
-	}
-	u.RawQuery = ""
-	su = u.String()
-	return
-}
+	"github.com/siongui/instago"
+)
 
 func GetStoryFilenameUrl(storyinfo string) (filename, url string) {
 	sss := strings.Split(storyinfo, ",")
@@ -25,7 +15,7 @@ func GetStoryFilenameUrl(storyinfo string) (filename, url string) {
 	}
 	url = sss[2]
 
-	urlnoq, err := StripQueryString(url)
+	urlnoq, err := instago.StripQueryString(url)
 	if err != nil {
 		return
 	}
