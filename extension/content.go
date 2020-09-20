@@ -184,6 +184,12 @@ func DoStoryAction() {
 	} else {
 		url = url2
 	}
+	if url == "" {
+		if debug {
+			println("url is empty string in DoStoryAction")
+		}
+		return
+	}
 	if debug {
 		println("story url: " + url)
 	}
