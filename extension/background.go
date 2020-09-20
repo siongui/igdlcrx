@@ -33,7 +33,7 @@ func GetStoryFilenameUrl(storyinfo string) (filename, url string) {
 }
 
 func DownloadPost(code string) {
-	em, err := GetPostInfo(code)
+	em, err := instago.GetPostInfoNoLogin(code)
 	if err != nil {
 		println(err.Error())
 		return
