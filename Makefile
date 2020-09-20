@@ -15,7 +15,7 @@ build: fmt
 	[ -d $(CRXDIR) ] || mkdir -p $(CRXDIR)
 	cp extension/manifest.json $(CRXDIR)
 	cp extension/style.css $(CRXDIR)
-	cd extension; gopherjs build background.go chrome.go story.go -o $(CRXDIR)/background.js
+	cd extension; gopherjs build background.go chrome.go -o $(CRXDIR)/background.js
 	cd extension; gopherjs build content.go chrome.go -o $(CRXDIR)/content.js
 
 pack: build

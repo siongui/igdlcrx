@@ -6,6 +6,7 @@ import (
 	"time"
 
 	. "github.com/siongui/godom"
+	"github.com/siongui/instago"
 )
 
 var debug = true
@@ -260,17 +261,12 @@ func CheckUrlAndDoAction(url string) {
 	if IsRootUrl(url) {
 		DoRootAction()
 	}
-	if IsStoryUrl(url) {
+	if instago.IsWebStoryUrl(url) {
 		DoStoryAction()
 	}
 	if IsUserUrl(url) {
 		DoUserAction()
 	}
-}
-
-func IsStoryUrl(url string) bool {
-	re := regexp.MustCompile(`^https:\/\/www\.instagram\.com\/stories\/[a-zA-Z\d_.]+\/\d+\/$`)
-	return re.MatchString(url)
 }
 
 func IsRootUrl(url string) bool {

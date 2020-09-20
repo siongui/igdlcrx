@@ -34,7 +34,7 @@ func GetStoryFilenameUrl(storyinfo string) (filename, mediaUrl string) {
 
 	id, ok := usernameId[username]
 	if !ok {
-		id2, err := GetId(storyurl)
+		id2, err := instago.GetIdFromWebStoryUrl(storyurl)
 		if err == nil {
 			id = id2
 			usernameId[username] = id
