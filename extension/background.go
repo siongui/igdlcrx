@@ -22,6 +22,11 @@ func GetTimeStr(timestamp string) string {
 	return t.In(loc).Format(time.RFC3339) + "-" + strconv.FormatInt(t.Unix(), 10)
 }
 
+func Rename(s string) string {
+	// chrome.downloads does not allow ":" in filename
+	return strings.Replace(s, ":", "_", -1)
+}
+
 func GetStoryFilenameUrl(storyinfo string) (filename, mediaUrl string) {
 	sss := strings.Split(storyinfo, ",")
 	if len(sss) != 4 {
@@ -48,7 +53,49 @@ func GetStoryFilenameUrl(storyinfo string) (filename, mediaUrl string) {
 
 	filename = username + "-" + id + "-story-" + GetTimeStr(timestamp) + "." + ext
 	// chrome.downloads does not allow ":" in filename
-	filename = strings.Replace(filename, ":", "_", -1)
+	filename = Rename(filename)
+	return
+}
+
+func DownloadIGMedia(em instago.IGMedia) (err error) {
+	urls, err := em.GetMediaUrls()
+	if err != nil {
+		return
+	}
+
+	for index, url := range urls {
+		var taggedusers []instago.IGTaggedUser
+		if len(urls) == 1 {
+			taggedusers = em.EdgeMediaToTaggedUser.GetIdUsernamePairs()
+		} else {
+			taggedusers = em.EdgeSidecarToChildren.Edges[index].Node.EdgeMediaToTaggedUser.GetIdUsernamePairs()
+		}
+
+		// prevent panic in instago.BuildFilename method
+		_, err = instago.StripQueryString(url)
+		if err != nil {
+			return
+		}
+
+		filename := instago.GetPostFilename(
+			em.GetUsername(),
+			em.GetUserId(),
+			em.GetPostCode(),
+			url,
+			em.GetTimestamp(),
+			taggedusers)
+		if index > 0 {
+			filename = instago.AppendIndexToFilename(filename, index)
+		}
+
+		options := make(map[string]string)
+		options["url"] = url
+		options["filename"] = Rename(filename)
+		//println(filename)
+		//println(url)
+		Chrome.Downloads.Call("download", options)
+
+	}
 	return
 }
 
@@ -58,7 +105,11 @@ func DownloadPost(code string) {
 		println(err.Error())
 		return
 	}
-	println(em)
+	err = DownloadIGMedia(em)
+	if err != nil {
+		println(err.Error())
+		return
+	}
 }
 
 func DownloadStory(storyinfo string) {
