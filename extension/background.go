@@ -48,7 +48,7 @@ func GetStoryFilenameUrl(storyinfo string) (filename, mediaUrl string) {
 
 	filename = username + "-" + id + "-story-" + GetTimeStr(timestamp) + "." + ext
 	// chrome.downloads does not allow ":" in filename
-	filename = strings.Replace(filename, ":", "-", -1)
+	filename = strings.Replace(filename, ":", "_", -1)
 	return
 }
 
