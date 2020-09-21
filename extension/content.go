@@ -252,8 +252,39 @@ func DoStoryAction() {
 	controlElm.AppendChild(btn)
 }
 
+func ProcessPostDiv(postdiv *Object) {
+	btns := postdiv.QuerySelectorAll(".download-timeline-post-btn")
+	if len(btns) > 0 {
+		return
+	}
+
+	aElm, ok := GetElementInElement(postdiv, "a[tabindex='0']")
+	if !ok {
+		return
+	}
+	if !aElm.HasAttribute("href") {
+		return
+	}
+	code := strings.TrimPrefix(aElm.GetAttribute("href"), "/p/")
+	code = strings.TrimSuffix(code, "/")
+
+	btn := Document.CreateElement("button")
+	btn.Dataset().Set("dataCode", code)
+	btn.ClassList().Add("download-timeline-post-btn")
+	btn.SetInnerHTML("Download")
+	btn.AddEventListener("click", func(e Event) {
+		// send code of post to background for download
+		Chrome.Runtime.Call("sendMessage", "postcode:"+code)
+	})
+	postdiv.Call("prepend", btn)
+}
+
 func DoUserAction() {
-	println("do user action")
+	//println("do user action")
+	posts := Document.QuerySelectorAll("div.v1Nh3.kIKUG._bz0w")
+	for _, post := range posts {
+		ProcessPostDiv(post)
+	}
 }
 
 func CheckUrlAndDoAction(url string) {
