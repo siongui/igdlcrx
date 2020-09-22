@@ -165,4 +165,13 @@ func main() {
 		}
 		println("Received msg from content: " + msg)
 	})
+
+	storyQH, u1, u2, err := instago.GetCrxWebQueryHash()
+	if err == nil {
+		println(storyQH)
+		println(u1)
+		println(u2)
+	} else {
+		println(err.Error())
+	}
 }
