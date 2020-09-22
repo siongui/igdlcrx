@@ -298,6 +298,12 @@ func CheckUrlAndDoAction(url string) {
 	if IsUserUrl(url) {
 		DoUserAction()
 	}
+	if IsSavedUrl(url) {
+		DoUserAction()
+	}
+	if IsTaggedUrl(url) {
+		DoUserAction()
+	}
 }
 
 func IsRootUrl(url string) bool {
@@ -307,6 +313,16 @@ func IsRootUrl(url string) bool {
 
 func IsUserUrl(url string) bool {
 	re := regexp.MustCompile(`^https:\/\/www\.instagram\.com\/[a-zA-Z\d_.]+\/$`)
+	return re.MatchString(url)
+}
+
+func IsSavedUrl(url string) bool {
+	re := regexp.MustCompile(`^https:\/\/www\.instagram\.com\/[a-zA-Z\d_.]+\/saved/$`)
+	return re.MatchString(url)
+}
+
+func IsTaggedUrl(url string) bool {
+	re := regexp.MustCompile(`^https:\/\/www\.instagram\.com\/[a-zA-Z\d_.]+\/tagged/$`)
 	return re.MatchString(url)
 }
 
