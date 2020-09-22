@@ -289,6 +289,35 @@ func DoUserAction() {
 	}
 }
 
+func DoPostAction(url string) {
+	//println("do post action")
+	articles := Document.QuerySelectorAll("article[role='presentation']")
+	if len(articles) == 0 {
+		return
+	}
+
+	btns := articles[0].QuerySelectorAll(".download-timeline-post-btn")
+	if len(btns) > 0 {
+		return
+	}
+
+	code := strings.TrimPrefix(url, "https://www.instagram.com/p/")
+	code = strings.TrimSuffix(code, "/")
+	if debug {
+		println(code)
+	}
+
+	btn := Document.CreateElement("button")
+	btn.Dataset().Set("dataCode", code)
+	btn.ClassList().Add("download-timeline-post-btn")
+	btn.SetInnerHTML("Download")
+	btn.AddEventListener("click", func(e Event) {
+		// send code of post to background for download
+		Chrome.Runtime.Call("sendMessage", "postcode:"+code)
+	})
+	articles[0].Call("prepend", btn)
+}
+
 func CheckUrlAndDoAction(url string) {
 	//println(time.Now().Format(time.RFC3339))
 	if IsRootUrl(url) {
@@ -305,6 +334,9 @@ func CheckUrlAndDoAction(url string) {
 	}
 	if IsTaggedUrl(url) {
 		DoUserAction()
+	}
+	if IsPostUrl(url) {
+		DoPostAction(url)
 	}
 }
 
@@ -325,6 +357,11 @@ func IsSavedUrl(url string) bool {
 
 func IsTaggedUrl(url string) bool {
 	re := regexp.MustCompile(`^https:\/\/www\.instagram\.com\/[a-zA-Z\d_.]+\/tagged/$`)
+	return re.MatchString(url)
+}
+
+func IsPostUrl(url string) bool {
+	re := regexp.MustCompile(`^https:\/\/www\.instagram\.com\/p\/[a-zA-Z\d_-]+\/$`)
 	return re.MatchString(url)
 }
 
