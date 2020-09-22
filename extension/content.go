@@ -9,7 +9,7 @@ import (
 	"github.com/siongui/instago"
 )
 
-var debug = true
+var debug = false
 
 func GetElementInElement(element *Object, selector string) (elm *Object, ok bool) {
 	elms := element.QuerySelectorAll(selector)
@@ -145,7 +145,9 @@ func ProcessArticleInRootPath(article *Object) {
 }
 
 func DoRootAction() {
-	println("do root action")
+	if debug {
+		println("do root action")
+	}
 	articles := Document.QuerySelectorAll("article[role='presentation']")
 	for _, article := range articles {
 		ProcessArticleInRootPath(article)
