@@ -1,7 +1,6 @@
 package main
 
 import (
-	"regexp"
 	"strings"
 	"time"
 
@@ -320,49 +319,24 @@ func DoPostAction(url string) {
 
 func CheckUrlAndDoAction(url string) {
 	//println(time.Now().Format(time.RFC3339))
-	if IsRootUrl(url) {
+	if instago.IsWebRootUrl(url) {
 		DoRootAction()
 	}
 	if instago.IsWebStoryUrl(url) {
 		DoStoryAction()
 	}
-	if IsUserUrl(url) {
+	if instago.IsWebUserUrl(url) {
 		DoUserAction()
 	}
-	if IsSavedUrl(url) {
+	if instago.IsWebSavedUrl(url) {
 		DoUserAction()
 	}
-	if IsTaggedUrl(url) {
+	if instago.IsWebTaggedUrl(url) {
 		DoUserAction()
 	}
-	if IsPostUrl(url) {
+	if instago.IsWebPostUrl(url) {
 		DoPostAction(url)
 	}
-}
-
-func IsRootUrl(url string) bool {
-	re := regexp.MustCompile(`^https:\/\/www\.instagram\.com\/$`)
-	return re.MatchString(url)
-}
-
-func IsUserUrl(url string) bool {
-	re := regexp.MustCompile(`^https:\/\/www\.instagram\.com\/[a-zA-Z\d_.]+\/$`)
-	return re.MatchString(url)
-}
-
-func IsSavedUrl(url string) bool {
-	re := regexp.MustCompile(`^https:\/\/www\.instagram\.com\/[a-zA-Z\d_.]+\/saved/$`)
-	return re.MatchString(url)
-}
-
-func IsTaggedUrl(url string) bool {
-	re := regexp.MustCompile(`^https:\/\/www\.instagram\.com\/[a-zA-Z\d_.]+\/tagged/$`)
-	return re.MatchString(url)
-}
-
-func IsPostUrl(url string) bool {
-	re := regexp.MustCompile(`^https:\/\/www\.instagram\.com\/p\/[a-zA-Z\d_-]+\/$`)
-	return re.MatchString(url)
 }
 
 func main() {
