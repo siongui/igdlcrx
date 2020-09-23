@@ -11,6 +11,29 @@ import (
 var mgr = instago.NewApiManager(nil, nil)
 var usernameId map[string]string
 
+func DownloadFBStory(fbstory string) {
+	sss := strings.Split(fbstory, ",")
+	if len(sss) != 2 {
+		println("facebook story message not correct")
+		return
+	}
+	username := sss[0]
+	// FIXME: handle blob url
+	url := sss[1]
+
+	//println(username)
+	//println(url)
+
+	filename := username + "-facebook-story." + GetStoryExt(url)
+
+	options := make(map[string]string)
+	options["url"] = url
+	options["filename"] = Rename(filename)
+	//println(filename)
+	//println(url)
+	Chrome.Downloads.Call("download", options)
+}
+
 func GetStoryExt(mediaUrl string) string {
 	urlnoq, _ := instago.StripQueryString(mediaUrl)
 	eee := strings.Split(urlnoq, ".")
@@ -162,6 +185,11 @@ func main() {
 		if strings.HasPrefix(msg, "storyinfo:") {
 			storyinfo := strings.TrimPrefix(msg, "storyinfo:")
 			go DownloadStory(storyinfo)
+			return
+		}
+		if strings.HasPrefix(msg, "fbstory:") {
+			fbstory := strings.TrimPrefix(msg, "fbstory:")
+			go DownloadFBStory(fbstory)
 			return
 		}
 		println("Received msg from content: " + msg)

@@ -12,8 +12,10 @@ func DoFacebookPhotoAction(url string) {
 	println("photo url: " + url)
 }
 
-func Download(username, url string) {
-	println(username + " " + url)
+func SendMessage(username, url string) {
+	println("download " + username + " " + url)
+	// send code of post to background for download
+	Chrome.Runtime.Call("sendMessage", "fbstory:"+username+","+url)
 }
 
 func DownloadFacebookStoryButton(username, url string) {
@@ -33,7 +35,7 @@ func DownloadFacebookStoryButton(username, url string) {
 		btn.AddEventListener("click", func(e Event) {
 			e.StopPropagation()
 			e.PreventDefault()
-			Download(e.Target().Dataset().Get("username").String(),
+			SendMessage(e.Target().Dataset().Get("username").String(),
 				e.Target().Dataset().Get("url").String())
 		})
 		container.ParentNode().ParentNode().ParentNode().AppendChild(btn)
