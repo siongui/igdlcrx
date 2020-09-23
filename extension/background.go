@@ -8,6 +8,7 @@ import (
 	"github.com/siongui/instago"
 )
 
+var mgr = instago.NewApiManager(nil, nil)
 var usernameId map[string]string
 
 func GetStoryExt(mediaUrl string) string {
@@ -39,7 +40,7 @@ func GetStoryFilenameUrl(storyinfo string) (filename, mediaUrl string) {
 
 	id, ok := usernameId[username]
 	if !ok {
-		id2, err := instago.GetIdFromWebStoryUrl(storyurl)
+		id2, err := mgr.GetIdFromWebStoryUrl(storyurl)
 		if err == nil {
 			id = id2
 			usernameId[username] = id
@@ -166,7 +167,7 @@ func main() {
 		println("Received msg from content: " + msg)
 	})
 
-	storyQH, u1, u2, err := instago.GetCrxWebQueryHash()
+	storyQH, u1, u2, err := mgr.GetWebQueryHash()
 	if err == nil {
 		println(storyQH)
 		println(u1)
