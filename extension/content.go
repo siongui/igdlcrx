@@ -10,16 +10,6 @@ import (
 
 var debug = false
 
-func GetElementInElement(element *Object, selector string) (elm *Object, ok bool) {
-	elms := element.QuerySelectorAll(selector)
-	if len(elms) == 1 {
-		elm = elms[0]
-		ok = true
-		return
-	}
-	return
-}
-
 func GetBestImageUrl(mediaElm *Object) string {
 	img, ok := GetElementInElement(mediaElm, "img")
 	if !ok {
