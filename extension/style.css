@@ -25,3 +25,17 @@
     padding: .3rem;
     border-radius: .5rem;
 }
+
+.fb-story-dl-button {
+    position: absolute;
+    z-index: 50;
+    line-height: 1.2;
+    top: 40%;
+    left: 40px;
+    font-weight: 900;
+    opacity: 0.7;
+    cursor: pointer;
+    align-items: center;
+    padding: .3rem;
+    border-radius: .5rem;
+}

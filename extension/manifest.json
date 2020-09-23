@@ -19,6 +19,7 @@
     },
     {
       "matches": ["https://www.facebook.com/*"],
+      "css": ["style.css"],
       "js": ["contentfb.js"]
     }
   ],

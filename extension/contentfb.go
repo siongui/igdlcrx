@@ -12,8 +12,36 @@ func DoFacebookPhotoAction(url string) {
 	println("photo url: " + url)
 }
 
-func DownloadFacebookStory(username, url string) {
+func Download(username, url string) {
 	println(username + " " + url)
+}
+
+func DownloadFacebookStoryButton(username, url string) {
+	//println(username + " " + url)
+	btns := Document.QuerySelectorAll(".fb-story-dl-button")
+	if len(btns) == 0 {
+		container, ok := GetElementInElement(Document, "i.hu5pjgll.m6k467ps.sp_F8MGkiW7YGw_1_5x.sx_acc4fa")
+		if !ok {
+			println("cannot find story button container")
+			return
+		}
+		btn := Document.CreateElement("button")
+		btn.ClassList().Add("fb-story-dl-button")
+		btn.Dataset().Set("username", username)
+		btn.Dataset().Set("url", url)
+		btn.SetInnerHTML("Download")
+		btn.AddEventListener("click", func(e Event) {
+			e.StopPropagation()
+			e.PreventDefault()
+			Download(e.Target().Dataset().Get("username").String(),
+				e.Target().Dataset().Get("url").String())
+		})
+		container.ParentNode().ParentNode().ParentNode().AppendChild(btn)
+	} else {
+		btn := btns[0]
+		btn.Dataset().Set("username", username)
+		btn.Dataset().Set("url", url)
+	}
 }
 
 func DoFacebookStoryAction(url string) {
@@ -54,7 +82,7 @@ func DoFacebookStoryAction(url string) {
 	if imgUrl != "" {
 		// download and return
 		//println(imgUrl)
-		DownloadFacebookStory(username, imgUrl)
+		DownloadFacebookStoryButton(username, imgUrl)
 		return
 	}
 
@@ -69,7 +97,7 @@ func DoFacebookStoryAction(url string) {
 		if videoUrl != "" {
 			// download and return
 			//println(videoUrl)
-			DownloadFacebookStory(username, videoUrl)
+			DownloadFacebookStoryButton(username, videoUrl)
 			return
 		}
 	}
