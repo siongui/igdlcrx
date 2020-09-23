@@ -12,20 +12,64 @@ func DoFacebookPhotoAction(url string) {
 	println("photo url: " + url)
 }
 
+func DownloadFacebookStory(username, url string) {
+	println(username + " " + url)
+}
+
 func DoFacebookStoryAction(url string) {
-	println("story url: " + url)
+	//println("story url: " + url)
 	storyElm, ok := GetElementInElement(Document, "div[data-pagelet='Stories']")
 	if !ok {
+		println("cannot find story element")
 		return
 	}
 
-	imgUrl := ""
-	// FIXME: not the imgElm we want
-	imgElm, ok := GetElementInElement(storyElm, "img")
-	if ok {
-		imgUrl = imgElm.GetAttribute("src")
+	// try to find story username
+	username := ""
+	userElm, ok := GetElementInElement(storyElm, "img.q9iuea42.qs4al1v0.eprw1yos.a4d05b8z.sibfvsnu.px9q9ucb.j2ut9x2k.p4hiznlx.a8c37x1j.qypqp5cg.bixrwtb6.q676j6op")
+	if !ok {
+		println("cannot find element containing username")
+		return
 	}
-	println(imgUrl)
+	if userElm.HasAttribute("alt") {
+		username = userElm.GetAttribute("alt")
+	}
+	if username == "" {
+		println("cannot get facebook story username")
+		return
+	}
+	//println(username)
+
+	// try to find story image (if exist)
+	imgUrl := ""
+	imgElm, ok := GetElementInElement(storyElm, "img.g5ia77u1.arfg74bv.n00je7tq.pmk7jnqg.j9ispegn.rk01pc8j.ke6wolob.k4urcfbm.du4w35lb")
+	if ok {
+		if imgElm.HasAttribute("src") {
+			imgUrl = imgElm.GetAttribute("src")
+		}
+	}
+	if imgUrl != "" {
+		// download and return
+		//println(imgUrl)
+		DownloadFacebookStory(username, imgUrl)
+		return
+	}
+
+	// story image not exist. find story video.
+	videoUrl := ""
+	videoElm, ok := GetElementInElement(storyElm, "video.k4urcfbm.datstx6m.a8c37x1j")
+	if ok {
+		if videoElm.HasAttribute("src") {
+			videoUrl = videoElm.GetAttribute("src")
+		}
+
+		if videoUrl != "" {
+			// download and return
+			//println(videoUrl)
+			DownloadFacebookStory(username, videoUrl)
+			return
+		}
+	}
 }
 
 func IsFacebookPhotoUrl(url string) bool {
