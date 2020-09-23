@@ -48,7 +48,7 @@ References
        | https://github.com/siongui/fbidcrx
        | https://github.com/siongui/igidcrx
 
-.. [3] https://github.com/fabioberger/chrome
+.. [3] https://github.com/siongui/instago
 
 .. _Go: https://golang.org/
 .. _JavaScript: https://www.google.com/search?q=JavaScript

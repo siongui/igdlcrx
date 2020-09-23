@@ -17,6 +17,7 @@ build: fmt
 	cp extension/style.css $(CRXDIR)
 	cd extension; gopherjs build background.go chrome.go -o $(CRXDIR)/background.js
 	cd extension; gopherjs build content.go chrome.go -o $(CRXDIR)/content.js
+	cd extension; gopherjs build contentfb.go chrome.go -o $(CRXDIR)/contentfb.js
 
 pack: build
 	cd $(CRXDIR); zip -r extension.zip .

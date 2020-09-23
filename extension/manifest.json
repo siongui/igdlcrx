@@ -16,6 +16,10 @@
       "matches": ["https://www.instagram.com/*"],
       "css": ["style.css"],
       "js": ["content.js"]
+    },
+    {
+      "matches": ["https://www.facebook.com/*"],
+      "js": ["contentfb.js"]
     }
   ],
 
