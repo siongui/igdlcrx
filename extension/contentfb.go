@@ -8,9 +8,18 @@ import (
 	"github.com/siongui/instago"
 )
 
+func DoFacebookPhotoAction(url string) {
+	println("photo url: " + url)
+}
+
+func DoFacebookStoryAction(url string) {
+	println("story url: " + url)
+}
+
 func IsFacebookPhotoUrl(url string) bool {
-	re := regexp.MustCompile(`^https:\/\/www\.facebook\.com\/photo\/\?fbid=\d+&set=[a-z\d.]+$`)
-	return re.MatchString(url)
+	re1 := regexp.MustCompile(`^https:\/\/www\.facebook\.com\/photo\/\?fbid=\d+&set=[a-z\d.]+$`)
+	re2 := regexp.MustCompile(`^https:\/\/www\.facebook\.com\/[a-zA-Z\d.]+\/photos\/[a-zA-Z\d.]+\/[a-zA-Z\d.]+\/?$`)
+	return re1.MatchString(url) || re2.MatchString(url)
 }
 
 func IsFacebookStoryUrl(url string) bool {
@@ -21,10 +30,10 @@ func IsFacebookStoryUrl(url string) bool {
 
 func CheckFacebookUrl(url string) {
 	if IsFacebookPhotoUrl(url) {
-		println("photo url: " + url)
+		DoFacebookPhotoAction(url)
 	}
 	if IsFacebookStoryUrl(url) {
-		println("story url: " + url)
+		DoFacebookStoryAction(url)
 	}
 }
 
