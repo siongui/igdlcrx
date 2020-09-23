@@ -18,11 +18,14 @@ func DownloadFacebookStory(username, url string) {
 
 func DoFacebookStoryAction(url string) {
 	//println("story url: " + url)
-	storyElm, ok := GetElementInElement(Document, "div[data-pagelet='Stories']")
-	if !ok {
-		println("cannot find story element")
-		return
-	}
+	/*
+		storyElm, ok := GetElementInElement(Document, "div[data-pagelet='Stories']")
+		if !ok {
+			println("cannot find story element")
+			return
+		}
+	*/
+	storyElm := Document
 
 	// try to find story username
 	username := ""
