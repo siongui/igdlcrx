@@ -14,6 +14,18 @@ func DoFacebookPhotoAction(url string) {
 
 func DoFacebookStoryAction(url string) {
 	println("story url: " + url)
+	storyElm, ok := GetElementInElement(Document, "div[data-pagelet='Stories']")
+	if !ok {
+		return
+	}
+
+	imgUrl := ""
+	// FIXME: not the imgElm we want
+	imgElm, ok := GetElementInElement(storyElm, "img")
+	if ok {
+		imgUrl = imgElm.GetAttribute("src")
+	}
+	println(imgUrl)
 }
 
 func IsFacebookPhotoUrl(url string) bool {
@@ -25,7 +37,7 @@ func IsFacebookPhotoUrl(url string) bool {
 func IsFacebookStoryUrl(url string) bool {
 	urlnoq, _ := instago.StripQueryString(url)
 	re := regexp.MustCompile(`^https:\/\/www\.facebook\.com\/stories\/\d+\/[a-zA-Z\d=]+\/$`)
-	return re.MatchString(urlnoq)
+	return re.MatchString(urlnoq) || (url == "https://www.facebook.com/stories")
 }
 
 func CheckFacebookUrl(url string) {
