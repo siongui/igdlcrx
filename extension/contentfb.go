@@ -9,7 +9,19 @@ import (
 )
 
 func DoFacebookPhotoAction(url string) {
-	println("photo url: " + url)
+	//println("photo url: " + url)
+	imgElm, ok := GetElementInElement(Document, "img.r9f5tntg.d2edcug0")
+	if !ok {
+		println("cannot find photo image element")
+		return
+	}
+
+	if !imgElm.HasAttribute("src") {
+		println("image element has no src attribute")
+		return
+	}
+	src := imgElm.GetAttribute("src")
+	println(src)
 }
 
 func SendMessage(username, url string) {
@@ -106,8 +118,9 @@ func DoFacebookStoryAction(url string) {
 }
 
 func IsFacebookPhotoUrl(url string) bool {
-	re1 := regexp.MustCompile(`^https:\/\/www\.facebook\.com\/photo\/\?fbid=\d+&set=[a-z\d.]+$`)
-	re2 := regexp.MustCompile(`^https:\/\/www\.facebook\.com\/[a-zA-Z\d.]+\/photos\/[a-zA-Z\d.]+\/[a-zA-Z\d.]+\/?$`)
+	re1 := regexp.MustCompile(`^https:\/\/www\.facebook\.com\/photo\/?\?fbid=\d+&set=[a-z\d.]+$`)
+	//re2 := regexp.MustCompile(`^https:\/\/www\.facebook\.com\/[a-zA-Z\d.]+\/photos\/[a-zA-Z\d.]+\/[a-zA-Z\d.]+\/?$`)
+	re2 := regexp.MustCompile(`^https:\/\/www\.facebook\.com\/.+\/photos\/[a-zA-Z\d.]+\/[a-zA-Z\d.]+\/?$`)
 	return re1.MatchString(url) || re2.MatchString(url)
 }
 
