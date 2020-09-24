@@ -8,6 +8,34 @@ import (
 	"github.com/siongui/instago"
 )
 
+func DownloadFacebookPhotoButton(username, url string) {
+	//println(username + " " + url)
+	btns := Document.QuerySelectorAll(".fb-photo-dl-button")
+	if len(btns) == 0 {
+		container, ok := GetElementInElement(Document, `div[data-name="media-viewer-nav-container"]`)
+		if !ok {
+			println("cannot find photo button container")
+			return
+		}
+		btn := Document.CreateElement("button")
+		btn.ClassList().Add("fb-photo-dl-button")
+		btn.Dataset().Set("username", username)
+		btn.Dataset().Set("url", url)
+		btn.SetInnerHTML("Download")
+		btn.AddEventListener("click", func(e Event) {
+			e.StopPropagation()
+			e.PreventDefault()
+			SendMessage(e.Target().Dataset().Get("username").String(),
+				e.Target().Dataset().Get("url").String(), "photo")
+		})
+		container.ParentNode().ParentNode().ParentNode().AppendChild(btn)
+	} else {
+		btn := btns[0]
+		btn.Dataset().Set("username", username)
+		btn.Dataset().Set("url", url)
+	}
+}
+
 func DoFacebookPhotoAction(url string) {
 	//println("photo url: " + url)
 	imgElm, ok := GetElementInElement(Document, "img.r9f5tntg.d2edcug0")
@@ -29,13 +57,22 @@ func DoFacebookPhotoAction(url string) {
 		return
 	}
 	username := userElm.InnerHTML()
-	println(username + " " + src)
+	//println(username + " " + src)
+
+	DownloadFacebookPhotoButton(username, src)
 }
 
-func SendMessage(username, url string) {
+func SendMessage(username, url, sel string) {
 	println("download " + username + " " + url)
 	// send code of post to background for download
-	Chrome.Runtime.Call("sendMessage", "fbstory:"+username+","+url)
+	if sel == "photo" {
+		Chrome.Runtime.Call("sendMessage", "fbphoto:"+username+",,,"+url)
+		return
+	}
+	if sel == "story" {
+		Chrome.Runtime.Call("sendMessage", "fbstory:"+username+","+url)
+		return
+	}
 }
 
 func DownloadFacebookStoryButton(username, url string) {
@@ -56,7 +93,7 @@ func DownloadFacebookStoryButton(username, url string) {
 			e.StopPropagation()
 			e.PreventDefault()
 			SendMessage(e.Target().Dataset().Get("username").String(),
-				e.Target().Dataset().Get("url").String())
+				e.Target().Dataset().Get("url").String(), "story")
 		})
 		container.ParentNode().ParentNode().ParentNode().AppendChild(btn)
 	} else {
@@ -129,7 +166,8 @@ func IsFacebookPhotoUrl(url string) bool {
 	re1 := regexp.MustCompile(`^https:\/\/www\.facebook\.com\/photo\/?\?fbid=\d+&set=[a-z\d.]+$`)
 	//re2 := regexp.MustCompile(`^https:\/\/www\.facebook\.com\/[a-zA-Z\d.]+\/photos\/[a-zA-Z\d.]+\/[a-zA-Z\d.]+\/?$`)
 	re2 := regexp.MustCompile(`^https:\/\/www\.facebook\.com\/.+\/photos\/[a-zA-Z\d.]+\/[a-zA-Z\d.]+\/?$`)
-	return re1.MatchString(url) || re2.MatchString(url)
+	re3 := regexp.MustCompile(`^https:\/\/www\.facebook\.com\/photo.php\?fbid=\d+&set=[a-z\d.]+`)
+	return re1.MatchString(url) || re2.MatchString(url) || re3.MatchString(url)
 }
 
 func IsFacebookStoryUrl(url string) bool {

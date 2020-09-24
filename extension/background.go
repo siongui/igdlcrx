@@ -1,6 +1,7 @@
 package main
 
 import (
+	"path"
 	"strconv"
 	"strings"
 	"time"
@@ -10,6 +11,27 @@ import (
 
 var mgr = instago.NewApiManager(nil, nil)
 var usernameId map[string]string
+
+func DownloadFBPhoto(fbphoto string) {
+	sss := strings.Split(fbphoto, ",,,")
+	if len(sss) != 2 {
+		println("facebook photo message not correct")
+		println(fbphoto)
+		return
+	}
+	username := sss[0]
+	url := sss[1]
+
+	urlnoq, _ := instago.StripQueryString(url)
+	filename := username + "-facebook-photo-" + path.Base(urlnoq)
+
+	options := make(map[string]string)
+	options["url"] = url
+	options["filename"] = Rename(filename)
+	//println(filename)
+	//println(url)
+	Chrome.Downloads.Call("download", options)
+}
 
 func DownloadFBStory(fbstory string) {
 	sss := strings.Split(fbstory, ",")
@@ -195,6 +217,11 @@ func main() {
 		if strings.HasPrefix(msg, "fbstory:") {
 			fbstory := strings.TrimPrefix(msg, "fbstory:")
 			go DownloadFBStory(fbstory)
+			return
+		}
+		if strings.HasPrefix(msg, "fbphoto:") {
+			fbphoto := strings.TrimPrefix(msg, "fbphoto:")
+			go DownloadFBPhoto(fbphoto)
 			return
 		}
 		println("Received msg from content: " + msg)
