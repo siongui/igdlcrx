@@ -21,7 +21,15 @@ func DoFacebookPhotoAction(url string) {
 		return
 	}
 	src := imgElm.GetAttribute("src")
-	println(src)
+	//println(src)
+
+	userElm, ok := GetElementInElement(Document, `div.buofh1pr > div > div:nth-child(1) > span > div > h2 > span > div > a`)
+	if !ok {
+		println("cannot find user element")
+		return
+	}
+	username := userElm.InnerHTML()
+	println(username + " " + src)
 }
 
 func SendMessage(username, url string) {
