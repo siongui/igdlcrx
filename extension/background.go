@@ -24,7 +24,12 @@ func DownloadFBStory(fbstory string) {
 	//println(username)
 	//println(url)
 
-	filename := username + "-facebook-story." + GetStoryExt(url)
+	ext := "jpg"
+	if strings.HasPrefix(url, "blob:") {
+		ext = "mp4"
+	}
+
+	filename := username + "-facebook-story." + ext
 
 	options := make(map[string]string)
 	options["url"] = url
