@@ -163,7 +163,7 @@ func DoFacebookStoryAction(url string) {
 }
 
 func IsFacebookPhotoUrl(url string) bool {
-	re1 := regexp.MustCompile(`^https:\/\/www\.facebook\.com\/photo\/?\?fbid=\d+&set=[a-z\d.]+$`)
+	re1 := regexp.MustCompile(`^https:\/\/www\.facebook\.com\/photo\/?\?fbid=\d+&set=[a-z\d.]+`)
 	//re2 := regexp.MustCompile(`^https:\/\/www\.facebook\.com\/[a-zA-Z\d.]+\/photos\/[a-zA-Z\d.]+\/[a-zA-Z\d.]+\/?$`)
 	re2 := regexp.MustCompile(`^https:\/\/www\.facebook\.com\/.+\/photos\/[a-zA-Z\d.]+\/[a-zA-Z\d.]+\/?$`)
 	re3 := regexp.MustCompile(`^https:\/\/www\.facebook\.com\/photo.php\?fbid=\d+&set=[a-z\d.]+`)
