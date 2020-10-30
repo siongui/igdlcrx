@@ -32,6 +32,9 @@ Tested on:
 Download extension.zip_ and install the extracted directory using
 `chrome extension developer mode`_.
 
+New! Support downloading Facebook photos and image story (video story not
+working)!
+
 
 UNLICENSE
 +++++++++

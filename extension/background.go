@@ -61,16 +61,10 @@ func DownloadFBStory(fbstory string) {
 	Chrome.Downloads.Call("download", options)
 }
 
-func GetStoryExt(mediaUrl string) string {
-	urlnoq, _ := instago.StripQueryString(mediaUrl)
-	eee := strings.Split(urlnoq, ".")
-	return eee[len(eee)-1]
-}
-
-func GetTimeStr(timestamp string) string {
+func GetTimeStr(timestamp string) (string, string) {
 	t, _ := time.Parse(time.RFC3339, timestamp)
 	loc := time.FixedZone("UTC+8", +8*60*60)
-	return t.In(loc).Format(time.RFC3339) + "-" + strconv.FormatInt(t.Unix(), 10)
+	return t.In(loc).Format(time.RFC3339), strconv.FormatInt(t.Unix(), 10)
 }
 
 func Rename(s string) string {
@@ -100,9 +94,8 @@ func GetStoryFilenameUrl(storyinfo string) (filename, mediaUrl string) {
 		}
 	}
 
-	ext := GetStoryExt(mediaUrl)
-
-	filename = username + "-" + id + "-story-" + GetTimeStr(timestamp) + "." + ext
+	timef, times := GetTimeStr(timestamp)
+	filename = instago.BuildStoryFilename2(mediaUrl, username, id, timef, times)
 	// chrome.downloads does not allow ":" in filename
 	filename = Rename(filename)
 	return
