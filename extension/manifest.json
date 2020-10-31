@@ -8,7 +8,7 @@
   "incognito": "split",
 
   "background": {
-      "scripts": ["background.js"]
+      "scripts": ["background.js", "request.js"]
   },
 
   "content_scripts": [
@@ -25,7 +25,9 @@
   ],
 
   "permissions": [
-    "https://www.instagram.com/*",
+    "webRequest",
+    "webRequestBlocking",
+    "*://*.instagram.com/*",
     "downloads",
     "tabs"
   ]

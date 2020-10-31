@@ -10,9 +10,10 @@ var Chrome = &ChromeExtension{Object: js.Global.Get("chrome")}
 // search gopherjs struct tag
 type ChromeExtension struct {
 	*js.Object
-	Runtime   *js.Object `js:"runtime"`
-	Tabs      *js.Object `js:"tabs"`
-	Downloads *js.Object `js:"downloads"`
+	Runtime    *js.Object `js:"runtime"`
+	Tabs       *js.Object `js:"tabs"`
+	Downloads  *js.Object `js:"downloads"`
+	WebRequest *js.Object `js:"webRequest"`
 }
 
 func GetElementInElement(element *Object, selector string) (elm *Object, ok bool) {
