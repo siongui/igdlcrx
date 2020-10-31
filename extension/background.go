@@ -11,6 +11,7 @@ import (
 
 var mgr = instago.NewApiManager(nil, nil)
 var usernameId map[string]string
+var idUserTray map[string]instago.UserTray
 
 func DownloadFBPhoto(fbphoto string) {
 	sss := strings.Split(fbphoto, ",,,")
@@ -61,10 +62,16 @@ func DownloadFBStory(fbstory string) {
 	Chrome.Downloads.Call("download", options)
 }
 
+// To be removed
 func GetTimeStr(timestamp string) (string, string) {
 	t, _ := time.Parse(time.RFC3339, timestamp)
 	loc := time.FixedZone("UTC+8", +8*60*60)
 	return t.In(loc).Format(time.RFC3339), strconv.FormatInt(t.Unix(), 10)
+}
+
+func GetStoryId(storyurl string) string {
+	sss := strings.Split(storyurl, "/")
+	return sss[len(sss)-2]
 }
 
 func Rename(s string) string {
@@ -78,7 +85,7 @@ func GetStoryFilenameUrl(storyinfo string) (filename, mediaUrl string) {
 		return
 	}
 	username := sss[0]
-	timestamp := sss[1]
+	//timestamp := sss[1]
 	mediaUrl = sss[2]
 	storyurl := sss[3]
 
@@ -90,12 +97,47 @@ func GetStoryFilenameUrl(storyinfo string) (filename, mediaUrl string) {
 			usernameId[username] = id
 		} else {
 			println(err.Error())
-			id = ""
+			filename = ""
+			return
 		}
 	}
 
-	timef, times := GetTimeStr(timestamp)
-	filename = instago.BuildStoryFilename2(mediaUrl, username, id, timef, times)
+	tray, ok := idUserTray[id]
+	if !ok {
+		ut, err := mgr.GetUserStory(id)
+		if err == nil {
+			tray = ut
+			idUserTray[id] = tray
+		} else {
+			println(err.Error())
+			filename = ""
+			return
+		}
+	}
+
+	item := instago.IGItem{}
+	for _, itm := range tray.Reel.Items {
+		//println(GetStoryId(storyurl))
+		//println(itm.Id)
+		if strings.HasPrefix(itm.Id, GetStoryId(storyurl)) {
+			item = itm
+		}
+	}
+	if item.GetTimestamp() == 0 {
+		println("story item not found")
+		filename = ""
+		return
+	}
+
+	filename = instago.BuildStoryFilename(mediaUrl, item.GetUsername(), item.GetUserId(), item.GetTimestamp())
+
+	var appendIdUsernames []instago.IGTaggedUser
+	for _, rm := range item.ReelMentions {
+		pair := instago.IGTaggedUser{Id: rm.GetUserId(), Username: rm.GetUsername()}
+		appendIdUsernames = append(appendIdUsernames, pair)
+	}
+	filename = instago.AppendTaggedUsersToFilename(username, id, filename, appendIdUsernames)
+
 	// chrome.downloads does not allow ":" in filename
 	filename = Rename(filename)
 	return
@@ -159,6 +201,9 @@ func DownloadPost(code string) {
 func DownloadStory(storyinfo string) {
 	options := make(map[string]string)
 	filename, url := GetStoryFilenameUrl(storyinfo)
+	if filename == "" {
+		return
+	}
 	options["url"] = url
 	options["filename"] = filename
 	//println(filename)
@@ -168,6 +213,7 @@ func DownloadStory(storyinfo string) {
 
 func main() {
 	usernameId = make(map[string]string)
+	idUserTray = make(map[string]instago.UserTray)
 
 	// Currently do nothing meaningful
 	Chrome.Tabs.Get("onUpdated").Call("addListener", func(tabId int, changeInfo map[string]interface{}) {
