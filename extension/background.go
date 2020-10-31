@@ -220,12 +220,32 @@ func main() {
 		println("Received msg from content: " + msg)
 	})
 
-	storyQH, u1, u2, err := mgr.GetWebQueryHash()
-	if err == nil {
-		println(storyQH)
-		println(u1)
-		println(u2)
-	} else {
+	/*
+		storyQH, u1, u2, err := mgr.GetWebQueryHash()
+		if err == nil {
+			println(storyQH)
+			println(u1)
+			println(u2)
+		} else {
+			println(err.Error())
+		}
+	*/
+
+	rturl, err := mgr.GetGetWebFeedReelsTrayUrl()
+	if err != nil {
 		println(err.Error())
+		return
+	} else {
+		println(rturl)
+	}
+
+	rms, err := mgr.GetWebFeedReelsTray(rturl)
+	if err != nil {
+		println(err.Error())
+		return
+	}
+
+	for _, rm := range rms {
+		usernameId[rm.User.Username] = rm.User.Id
 	}
 }
