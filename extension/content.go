@@ -338,6 +338,9 @@ func main() {
 		println("Received URL from background: " + url)
 	})
 
+	// tell background script that page reloaded
+	Chrome.Runtime.Call("sendMessage", "pageReload")
+
 	ticker := time.NewTicker(500 * time.Millisecond)
 	go func() {
 		for {

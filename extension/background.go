@@ -89,6 +89,7 @@ func GetStoryFilenameUrl(storyinfo string) (filename, mediaUrl string) {
 	mediaUrl = sss[2]
 	storyurl := sss[3]
 
+	// get id from username
 	id, ok := usernameId[username]
 	if !ok {
 		id2, err := mgr.GetIdFromWebStoryUrl(storyurl)
@@ -102,6 +103,7 @@ func GetStoryFilenameUrl(storyinfo string) (filename, mediaUrl string) {
 		}
 	}
 
+	// get user story tray if not exist
 	tray, ok := idUserTray[id]
 	if !ok {
 		ut, err := mgr.GetUserStory(id)
@@ -115,6 +117,7 @@ func GetStoryFilenameUrl(storyinfo string) (filename, mediaUrl string) {
 		}
 	}
 
+	// get story item from item id
 	item := instago.IGItem{}
 	for _, itm := range tray.Reel.Items {
 		//println(GetStoryId(storyurl))
@@ -123,6 +126,7 @@ func GetStoryFilenameUrl(storyinfo string) (filename, mediaUrl string) {
 			item = itm
 		}
 	}
+	// story item does not exist, return
 	if item.GetTimestamp() == 0 {
 		println("story item not found")
 		filename = ""
@@ -263,6 +267,13 @@ func main() {
 			go DownloadFBPhoto(fbphoto)
 			return
 		}
+
+		if msg == "pageReload" {
+			idUserTray = make(map[string]instago.UserTray)
+			println("page reloaded")
+			return
+		}
+
 		println("Received msg from content: " + msg)
 	})
 
