@@ -28,6 +28,7 @@
     "webRequest",
     "webRequestBlocking",
     "*://*.instagram.com/*",
+    "http://localhost:8080/*",
     "downloads",
     "tabs"
   ]

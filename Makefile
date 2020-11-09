@@ -23,9 +23,14 @@ build: fmt
 pack: build
 	cd $(CRXDIR); zip -r extension.zip .
 
+localhost: fmt
+	@echo "\033[92mlocalhost Server Running ...\033[0m"
+	@go run localhost/server.go
+
 fmt:
 	@echo "\033[92mGo fmt source code...\033[0m"
 	@go fmt extension/*.go
+	@go fmt localhost/*.go
 
 install:
 	@echo "\033[92mInstalling GopherJS ...\033[0m"

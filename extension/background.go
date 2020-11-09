@@ -1,6 +1,8 @@
 package main
 
 import (
+	"io/ioutil"
+	"net/http"
 	"path"
 	"strconv"
 	"strings"
@@ -12,6 +14,7 @@ import (
 var mgr = instago.NewApiManager(nil, nil)
 var usernameId map[string]string
 var idUserTray map[string]instago.UserTray
+var ifLocalhost = false
 
 func DownloadFBPhoto(fbphoto string) {
 	sss := strings.Split(fbphoto, ",,,")
@@ -288,6 +291,7 @@ func main() {
 		}
 	*/
 
+	// get web url of reels tray
 	rturl, err := mgr.GetGetWebFeedReelsTrayUrl()
 	if err != nil {
 		println(err.Error())
@@ -296,13 +300,37 @@ func main() {
 		println(rturl)
 	}
 
+	// get web reels tray
 	rms, err := mgr.GetWebFeedReelsTray(rturl)
 	if err != nil {
 		println(err.Error())
 		return
 	}
 
+	// set id - username pairs via data of reels tray
 	for _, rm := range rms {
 		usernameId[rm.User.Username] = rm.User.Id
 	}
+
+	// check if localhost server is alive
+	resp, err := http.Get("http://localhost:8080/alive/")
+	if err != nil {
+		println("localhost server is NOT alive")
+		return
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		println("localhost server is NOT alive")
+		return
+	}
+
+	if string(body) == "ok" {
+		println("localhost server is alive")
+		ifLocalhost = true
+		return
+	}
+
+	println("localhost server is NOT alive")
 }
