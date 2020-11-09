@@ -9,6 +9,7 @@ import (
 )
 
 var debug = false
+var isLocalhostAlive = false
 
 func GetBestImageUrl(mediaElm *Object) string {
 	img, ok := GetElementInElement(mediaElm, "img")
@@ -330,16 +331,23 @@ func CheckUrlAndDoAction(url string) {
 }
 
 func main() {
-	// Currently this receiver do nothing meaningful.
-	// Just print received URL.
+	// receive messages from background script
 	Chrome.Runtime.Get("onMessage").Call("addListener", func(message interface{}) {
-		url := message.(string)
+		msg := message.(string)
 		//CheckUrlAndDoAction(url)
-		println("Received URL from background: " + url)
+		println("Received from background: " + msg)
+
+		if msg == "localhostIsAlive" {
+			isLocalhostAlive = true
+			println("localhost server is alive")
+		}
 	})
 
 	// tell background script that page reloaded
 	Chrome.Runtime.Call("sendMessage", "pageReload")
+
+	// ask background script if localhost server is alive
+	Chrome.Runtime.Call("sendMessage", "isLocalhostAlive")
 
 	ticker := time.NewTicker(500 * time.Millisecond)
 	go func() {

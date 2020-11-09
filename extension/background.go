@@ -14,7 +14,7 @@ import (
 var mgr = instago.NewApiManager(nil, nil)
 var usernameId map[string]string
 var idUserTray map[string]instago.UserTray
-var ifLocalhost = false
+var isLocalhostAlive = false
 
 func DownloadFBPhoto(fbphoto string) {
 	sss := strings.Split(fbphoto, ",,,")
@@ -218,6 +218,42 @@ func DownloadStory(storyinfo string) {
 	Chrome.Downloads.Call("download", options)
 }
 
+func SendMessageToContentScript(msg string) {
+	queryInfo := make(map[string]interface{})
+	queryInfo["active"] = true
+	queryInfo["currentWindow"] = true
+
+	Chrome.Tabs.Call("query", queryInfo, func(tabs []map[string]interface{}) {
+		if len(tabs) == 1 {
+			Chrome.Tabs.Call("sendMessage", tabs[0]["id"], msg)
+		}
+	})
+}
+
+func IsLocalhostAlive() bool {
+	// check if localhost server is alive
+	resp, err := http.Get("http://localhost:8080/alive/")
+	if err != nil {
+		isLocalhostAlive = false
+		return isLocalhostAlive
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		isLocalhostAlive = false
+		return isLocalhostAlive
+	}
+
+	if string(body) == "ok" {
+		isLocalhostAlive = true
+		return isLocalhostAlive
+	}
+
+	isLocalhostAlive = false
+	return isLocalhostAlive
+}
+
 func main() {
 	usernameId = make(map[string]string)
 	idUserTray = make(map[string]instago.UserTray)
@@ -229,16 +265,7 @@ func main() {
 		}
 
 		url := changeInfo["url"].(string)
-
-		queryInfo := make(map[string]interface{})
-		queryInfo["active"] = true
-		queryInfo["currentWindow"] = true
-
-		Chrome.Tabs.Call("query", queryInfo, func(tabs []map[string]interface{}) {
-			if len(tabs) == 1 {
-				Chrome.Tabs.Call("sendMessage", tabs[0]["id"], url)
-			}
-		})
+		SendMessageToContentScript(url)
 	})
 
 	// Receive code of post from content.
@@ -277,6 +304,15 @@ func main() {
 			return
 		}
 
+		if msg == "isLocalhostAlive" {
+			go func() {
+				if IsLocalhostAlive() {
+					SendMessageToContentScript("localhostIsAlive")
+				}
+			}()
+			return
+		}
+
 		println("Received msg from content: " + msg)
 	})
 
@@ -311,26 +347,4 @@ func main() {
 	for _, rm := range rms {
 		usernameId[rm.User.Username] = rm.User.Id
 	}
-
-	// check if localhost server is alive
-	resp, err := http.Get("http://localhost:8080/alive/")
-	if err != nil {
-		println("localhost server is NOT alive")
-		return
-	}
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		println("localhost server is NOT alive")
-		return
-	}
-
-	if string(body) == "ok" {
-		println("localhost server is alive")
-		ifLocalhost = true
-		return
-	}
-
-	println("localhost server is NOT alive")
 }
