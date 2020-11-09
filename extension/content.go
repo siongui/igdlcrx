@@ -234,7 +234,7 @@ func DoStoryAction() {
 	btn.ClassList().Add("download-story-btn")
 	btn.SetInnerHTML("Download")
 	btn.AddEventListener("click", func(e Event) {
-		// send code of post to background for download
+		// send story info to background for download
 		Chrome.Runtime.Call("sendMessage", "storyinfo:"+username+","+timestamp+","+mediaUrl+","+Window.Location().Href())
 	})
 	controlElm, ok := GetElementInElement(section, "div.GHEPc")
@@ -242,6 +242,20 @@ func DoStoryAction() {
 		return
 	}
 	controlElm.AppendChild(btn)
+
+	// if localhost server is alive, add localhost download button
+	if isLocalhostAlive {
+		btnlh := Document.CreateElement("button")
+		btnlh.ClassList().Add("download-story-btn")
+		btnlh.SetInnerHTML("Download(LH)")
+		btnlh.Style().SetTop("33%")
+		btnlh.Style().SetRight("-110px")
+		btnlh.AddEventListener("click", func(e Event) {
+			// send story info to background for download
+			Chrome.Runtime.Call("sendMessage", "localhost:"+Window.Location().Pathname())
+		})
+		controlElm.AppendChild(btnlh)
+	}
 }
 
 func ProcessPostDiv(postdiv *Object) {

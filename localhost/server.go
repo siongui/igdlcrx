@@ -13,7 +13,7 @@ func aliveHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func storyHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "url path: %s!", r.URL.Path)
+	fmt.Println("url path: " + r.URL.Path)
 }
 
 func main() {

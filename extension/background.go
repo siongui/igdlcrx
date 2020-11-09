@@ -297,6 +297,13 @@ func main() {
 			go DownloadFBPhoto(fbphoto)
 			return
 		}
+		if strings.HasPrefix(msg, "localhost:") {
+			path := strings.TrimPrefix(msg, "localhost:")
+			go func() {
+				http.Get("http://localhost:8080" + path)
+			}()
+			return
+		}
 
 		if msg == "pageReload" {
 			idUserTray = make(map[string]instago.UserTray)
