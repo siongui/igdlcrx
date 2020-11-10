@@ -41,3 +41,4 @@ install:
 	go get -u github.com/siongui/godom
 	@echo "\033[92mInstalling github.com/siongui/instago ...\033[0m"
 	go get -u github.com/siongui/instago
+	go get -u github.com/siongui/instago/download
