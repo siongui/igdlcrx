@@ -1,0 +1,55 @@
+.download-timeline-post-btn {
+    position: absolute;
+    z-index: 50;
+    line-height: 1.2;
+    top: 1.5%;
+    right: 10%;
+    font-weight: 900;
+    opacity: 0.7;
+    cursor: pointer;
+    align-items: center;
+    padding: .3rem;
+    border-radius: .5rem;
+}
+
+.download-story-btn {
+    position: absolute;
+    z-index: 50;
+    line-height: 1.2;
+    top: 40%;
+    right: -82px;
+    font-weight: 900;
+    opacity: 0.7;
+    cursor: pointer;
+    align-items: center;
+    padding: .3rem;
+    border-radius: .5rem;
+}
+
+.fb-story-dl-button {
+    position: absolute;
+    z-index: 50;
+    line-height: 1.2;
+    top: 40%;
+    left: 40px;
+    font-weight: 900;
+    opacity: 0.7;
+    cursor: pointer;
+    align-items: center;
+    padding: .3rem;
+    border-radius: .5rem;
+}
+
+.fb-photo-dl-button {
+    position: absolute;
+    z-index: 50;
+    line-height: 1.2;
+    top: 40%;
+    right: 10px;
+    font-weight: 900;
+    opacity: 0.7;
+    cursor: pointer;
+    align-items: center;
+    padding: .3rem;
+    border-radius: .5rem;
+}

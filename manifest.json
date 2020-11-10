@@ -1,0 +1,35 @@
+{
+  "manifest_version": 2,
+
+  "name": "igdlcrx",
+  "description" : "Download Instagram Stuff",
+  "version": "0.1",
+
+  "incognito": "split",
+
+  "background": {
+      "scripts": ["background.js", "request.js"]
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["https://www.instagram.com/*"],
+      "css": ["style.css"],
+      "js": ["content.js"]
+    },
+    {
+      "matches": ["https://www.facebook.com/*"],
+      "css": ["style.css"],
+      "js": ["contentfb.js"]
+    }
+  ],
+
+  "permissions": [
+    "webRequest",
+    "webRequestBlocking",
+    "*://*.instagram.com/*",
+    "http://localhost:8080/*",
+    "downloads",
+    "tabs"
+  ]
+}
