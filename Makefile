@@ -27,6 +27,10 @@ localhost: fmt
 	@echo "\033[92mlocalhost Server Running ...\033[0m"
 	@go run localhost/server.go
 
+userstory2layer: fmt
+	@echo "\033[92mDownload user $(id) unexpired stories and stories of reel mentions...\033[0m"
+	@go run localhost/userstory2layer.go -id=$(id)
+
 fmt:
 	@echo "\033[92mGo fmt source code...\033[0m"
 	@go fmt extension/*.go
