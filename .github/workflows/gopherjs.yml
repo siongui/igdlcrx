@@ -1,0 +1,30 @@
+name: GopherJS Chome Extension CI
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2.3.1
+      with:
+        persist-credentials: false
+    - uses: actions/setup-go@v2
+      with:
+        go-version: '1.12.17'
+    - name: Install dependencies
+      run: |
+        make install
+    - name: Build crx
+      run: |
+        make pack
+    - name: Deploy
+      uses: JamesIves/github-pages-deploy-action@3.7.1
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: crx
+        CLEAN: true
