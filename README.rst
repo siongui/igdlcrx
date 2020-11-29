@@ -8,8 +8,11 @@ Instagram Download Chrome Extension
 .. image:: https://godoc.org/github.com/siongui/igdlcrx?status.svg
    :target: https://godoc.org/github.com/siongui/igdlcrx
 
-.. image:: https://api.travis-ci.org/siongui/igdlcrx.png?branch=master
+.. .. image:: https://api.travis-ci.org/siongui/igdlcrx.png?branch=master
    :target: https://travis-ci.org/siongui/igdlcrx
+
+.. image:: https://github.com/siongui/igdlcrx/workflows/GopherJS%20Chome%20Extension%20CI/badge.svg
+    :target: https://github.com/siongui/igdlcrx/blob/master/.github/workflows/gopherjs.yml
 
 .. image:: https://goreportcard.com/badge/github.com/siongui/igdlcrx
    :target: https://goreportcard.com/report/github.com/siongui/igdlcrx
