@@ -147,7 +147,7 @@ func DoRootAction() {
 func DoStoryAction() {
 	//println("do story action")
 
-	section, ok := GetElementInElement(Document, "section._8XqED.carul")
+	section, ok := GetElementInElement(Document, "section.szopg")
 	if !ok {
 		if debug {
 			println("cannot find section in DoStoryAction")
@@ -163,7 +163,7 @@ func DoStoryAction() {
 		return
 	}
 
-	userElm, ok := GetElementInElement(section, "a.FPmhX.notranslate.R4sSg")
+	userElm, ok := GetElementInElement(section, "a.FPmhX.notranslate")
 	if !ok {
 		if debug {
 			println("cannot find userElm in DoStoryAction")
@@ -237,8 +237,9 @@ func DoStoryAction() {
 		// send story info to background for download
 		Chrome.Runtime.Call("sendMessage", "storyinfo:"+username+","+timestamp+","+mediaUrl+","+Window.Location().Href())
 	})
-	controlElm, ok := GetElementInElement(section, "div.GHEPc")
+	controlElm, ok := GetElementInElement(section, "div.Cd8X1")
 	if !ok {
+		println("cannot find controlElm in DoStoryAction")
 		return
 	}
 	controlElm.AppendChild(btn)
