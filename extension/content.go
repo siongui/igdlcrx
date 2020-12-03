@@ -155,12 +155,15 @@ func DoStoryAction() {
 		return
 	}
 
+	isStoryDownloadButtonExist := false
 	btns := section.QuerySelectorAll(".download-story-btn")
 	if len(btns) > 0 {
 		if debug {
-			println("story download button exist. exit.")
+			//println("story download button exist. exit.")
+			println("story download button exist.")
 		}
-		return
+		isStoryDownloadButtonExist = true
+		//return
 	}
 
 	userElm, ok := GetElementInElement(section, "a.FPmhX.notranslate")
@@ -229,20 +232,32 @@ func DoStoryAction() {
 		println("story mediaUrl: " + mediaUrl)
 	}
 
-	btn := Document.CreateElement("button")
-	btn.Dataset().Set("dataMediaUrl", mediaUrl)
-	btn.ClassList().Add("download-story-btn")
-	btn.SetInnerHTML("Download")
-	btn.AddEventListener("click", func(e Event) {
-		// send story info to background for download
-		Chrome.Runtime.Call("sendMessage", "storyinfo:"+username+","+timestamp+","+mediaUrl+","+Window.Location().Href())
-	})
+	// used to append download button
 	controlElm, ok := GetElementInElement(section, "div.Cd8X1")
 	if !ok {
 		println("cannot find controlElm in DoStoryAction")
 		return
 	}
-	controlElm.AppendChild(btn)
+
+	if isStoryDownloadButtonExist {
+		btn := Document.CreateElement("button")
+		btn.Dataset().Set("dataMediaUrl", mediaUrl)
+		btn.Dataset().Set("dataUsername", username)
+		btn.Dataset().Set("dataTimestamp", timestamp)
+		btn.Dataset().Set("dataHref", Window.Location().Href())
+		btn.ClassList().Add("download-story-btn")
+		btn.SetInnerHTML("Download")
+		btn.AddEventListener("click", func(e Event) {
+			// send story info to background for download
+			Chrome.Runtime.Call("sendMessage", "storyinfo:"+btn.Dataset().Get("dataUsername").String()+","+btn.Dataset().Get("dataTimestamp").String()+","+btn.Dataset().Get("dataMediaUrl").String()+","+btn.Dataset().Get("dataHref").String())
+		})
+		controlElm.AppendChild(btn)
+	} else {
+		btns[0].Dataset().Set("dataMediaUrl", mediaUrl)
+		btns[0].Dataset().Set("dataUsername", username)
+		btns[0].Dataset().Set("dataTimestamp", timestamp)
+		btns[0].Dataset().Set("dataHref", Window.Location().Href())
+	}
 
 	// if localhost server is alive, add localhost download button
 	if isLocalhostAlive {
