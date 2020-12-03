@@ -239,7 +239,7 @@ func DoStoryAction() {
 		return
 	}
 
-	if isStoryDownloadButtonExist {
+	if !isStoryDownloadButtonExist {
 		btn := Document.CreateElement("button")
 		btn.Dataset().Set("dataMediaUrl", mediaUrl)
 		btn.Dataset().Set("dataUsername", username)
