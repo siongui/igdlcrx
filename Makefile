@@ -9,6 +9,8 @@ endif
 
 CRXDIR=$(CURDIR)/crx
 ZIPFILE=$(CRXDIR)/extension.zip
+LOCAL_LIBBGDIR=extension/libbackground
+LIBBGDIR=$(GOPATH)/src/github.com/siongui/igdlcrx/$(LOCAL_LIBBGDIR)
 
 build: fmt
 	@echo "\033[92mCompiling Go to JavaScript ...\033[0m"
@@ -19,6 +21,10 @@ build: fmt
 	cd extension; gopherjs build background.go chrome.go -o $(CRXDIR)/background.js
 	cd extension; gopherjs build content.go chrome.go -o $(CRXDIR)/content.js
 	cd extension; gopherjs build contentfb.go chrome.go -o $(CRXDIR)/contentfb.js
+
+copylocallib:
+	[ -d $(LIBBGDIR) ] || mkdir -p $(LIBBGDIR)
+	cp $(LOCAL_LIBBGDIR)/*.go $(LIBBGDIR)
 
 pack: build
 	cd $(CRXDIR); zip -r extension.zip .
@@ -34,6 +40,7 @@ userstory2layer: fmt
 fmt:
 	@echo "\033[92mGo fmt source code...\033[0m"
 	@go fmt extension/*.go
+	@go fmt $(LOCAL_LIBBGDIR)/*.go
 	@go fmt localhost/*.go
 
 install:
@@ -46,3 +53,5 @@ install:
 	@echo "\033[92mInstalling github.com/siongui/instago ...\033[0m"
 	go get -u github.com/siongui/instago
 	go get -u github.com/siongui/instago/download
+	@echo "\033[92mInstalling github.com/extension/libbackground ...\033[0m"
+	go get -u github.com/siongui/igdlcrx/extension/libbackground

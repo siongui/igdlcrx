@@ -8,12 +8,11 @@ import (
 	"strings"
 	"time"
 
+	"github.com/siongui/igdlcrx/extension/libbackground"
 	"github.com/siongui/instago"
 )
 
 var mgr = instago.NewApiManager(nil, nil)
-var usernameId map[string]string
-var idUserTray map[string]instago.UserTray
 var isLocalhostAlive = false
 
 func DownloadFBPhoto(fbphoto string) {
@@ -72,11 +71,6 @@ func GetTimeStr(timestamp string) (string, string) {
 	return t.In(loc).Format(time.RFC3339), strconv.FormatInt(t.Unix(), 10)
 }
 
-func GetStoryId(storyurl string) string {
-	sss := strings.Split(storyurl, "/")
-	return sss[len(sss)-2]
-}
-
 func Rename(s string) string {
 	// chrome.downloads does not allow ":" in filename
 	return strings.Replace(s, ":", "_", -1)
@@ -92,46 +86,16 @@ func GetStoryFilenameUrl(storyinfo string) (filename, mediaUrl string) {
 	mediaUrl = sss[2]
 	storyurl := sss[3]
 
-	// get id from username
-	id, ok := usernameId[username]
-	if !ok {
-		id2, err := mgr.GetIdFromWebStoryUrl(storyurl)
-		if err == nil {
-			id = id2
-			usernameId[username] = id
-		} else {
-			println(err.Error())
-			filename = ""
-			return
-		}
+	id, err := libbackground.GetIdFromUsername(username, storyurl)
+	if err != nil {
+		println(err.Error())
+		filename = ""
+		return
 	}
 
-	// get user story tray if not exist
-	tray, ok := idUserTray[id]
-	if !ok {
-		ut, err := mgr.GetUserStory(id)
-		if err == nil {
-			tray = ut
-			idUserTray[id] = tray
-		} else {
-			println(err.Error())
-			filename = ""
-			return
-		}
-	}
-
-	// get story item from item id
-	item := instago.IGItem{}
-	for _, itm := range tray.Reel.Items {
-		//println(GetStoryId(storyurl))
-		//println(itm.Id)
-		if strings.HasPrefix(itm.Id, GetStoryId(storyurl)) {
-			item = itm
-		}
-	}
-	// story item does not exist, return
-	if item.GetTimestamp() == 0 {
-		println("story item not found")
+	item, err := libbackground.GetStoryItem(id, storyurl)
+	if err != nil {
+		println(err.Error())
 		filename = ""
 		return
 	}
@@ -255,9 +219,6 @@ func IsLocalhostAlive() bool {
 }
 
 func main() {
-	usernameId = make(map[string]string)
-	idUserTray = make(map[string]instago.UserTray)
-
 	// Currently do nothing meaningful
 	Chrome.Tabs.Get("onUpdated").Call("addListener", func(tabId int, changeInfo map[string]interface{}) {
 		if _, ok := changeInfo["url"]; !ok {
@@ -306,7 +267,7 @@ func main() {
 		}
 
 		if msg == "pageReload" {
-			idUserTray = make(map[string]instago.UserTray)
+			libbackground.ResetVariables()
 			println("page reloaded")
 			return
 		}
@@ -352,6 +313,6 @@ func main() {
 
 	// set id - username pairs via data of reels tray
 	for _, rm := range rms {
-		usernameId[rm.User.Username] = rm.User.Id
+		libbackground.SetUsernameId(rm.User.Username, rm.User.Id)
 	}
 }
