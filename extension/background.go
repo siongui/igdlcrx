@@ -211,6 +211,24 @@ func IsLocalhostAlive() bool {
 	return isLocalhostAlive
 }
 
+func SendReelMentionsToContentScript(storyUrl string) {
+	item, err := libbackground.GetStoryItemFromStoryUrl(storyUrl)
+	if err != nil {
+		println(err.Error())
+		return
+	}
+
+	msg := ""
+	for _, rm := range item.ReelMentions {
+		if rm.IsPublic() {
+			msg += rm.GetUserId() + ":" + rm.GetUsername() + ":" + rm.DisplayType + ":" + "public;"
+		} else {
+			msg += rm.GetUserId() + ":" + rm.GetUsername() + ":" + rm.DisplayType + ":" + "private;"
+		}
+	}
+	SendMessageToContentScript("reelmentions:" + msg)
+}
+
 func main() {
 	// Currently do nothing meaningful
 	Chrome.Tabs.Get("onUpdated").Call("addListener", func(tabId int, changeInfo map[string]interface{}) {
@@ -234,6 +252,11 @@ func main() {
 				Chrome.Tabs.Call("create", createProperties)
 			*/
 			go DownloadPost(code)
+			return
+		}
+		if strings.HasPrefix(msg, "visitStoryUrl:") {
+			storyUrl := strings.TrimPrefix(msg, "visitStoryUrl:")
+			go SendReelMentionsToContentScript(storyUrl)
 			return
 		}
 		if strings.HasPrefix(msg, "storyinfo:") {

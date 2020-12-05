@@ -344,6 +344,8 @@ func CheckUrlAndDoAction(url string) {
 		DoRootAction()
 	}
 	if instago.IsWebStoryUrl(url) {
+		// tell background script current story url
+		Chrome.Runtime.Call("sendMessage", "visitStoryUrl:"+url)
 		DoStoryAction()
 	}
 	if instago.IsWebUserUrl(url) {
