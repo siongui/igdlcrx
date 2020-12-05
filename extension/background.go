@@ -86,14 +86,7 @@ func GetStoryFilenameUrl(storyinfo string) (filename, mediaUrl string) {
 	mediaUrl = sss[2]
 	storyurl := sss[3]
 
-	id, err := libbackground.GetIdFromUsername(username, storyurl)
-	if err != nil {
-		println(err.Error())
-		filename = ""
-		return
-	}
-
-	item, err := libbackground.GetStoryItem(id, storyurl)
+	item, err := libbackground.GetStoryItemFromStoryUrl(storyurl)
 	if err != nil {
 		println(err.Error())
 		filename = ""
@@ -107,7 +100,7 @@ func GetStoryFilenameUrl(storyinfo string) (filename, mediaUrl string) {
 		pair := instago.IGTaggedUser{Id: rm.GetUserId(), Username: rm.GetUsername()}
 		appendIdUsernames = append(appendIdUsernames, pair)
 	}
-	filename = instago.AppendTaggedUsersToFilename(username, id, filename, appendIdUsernames)
+	filename = instago.AppendTaggedUsersToFilename(username, item.GetUserId(), filename, appendIdUsernames)
 
 	// chrome.downloads does not allow ":" in filename
 	filename = Rename(filename)
