@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strings"
 	"time"
 
@@ -362,6 +363,45 @@ func CheckUrlAndDoAction(url string) {
 	}
 }
 
+func ProcessReelMentions(rms string) {
+	sss := strings.Split(rms, ";")
+	rmsHtml := ""
+	for _, rm := range sss {
+		if rm != "" {
+			ss := strings.Split(rm, ":")
+			astr := fmt.Sprintf("<a href='https://www.instagram.com/stories/%s/'>%s (%s, %s)</a>", ss[1], ss[1], ss[2], ss[3])
+			astr += "<br>"
+			rmsHtml += astr
+		}
+	}
+
+	section, ok := GetElementInElement(Document, "section.szopg")
+	if !ok {
+		if debug {
+			println("cannot find section in DoStoryAction")
+		}
+		return
+	}
+
+	// used to append download button
+	controlElm, ok := GetElementInElement(section, "div.Cd8X1")
+	if !ok {
+		println("cannot find controlElm in ProcessReelMentions")
+		return
+	}
+
+	if rmsElm, ok := GetElementInElement(controlElm, "div.ReelMentions"); ok {
+		rmsElm.SetInnerHTML(rmsHtml)
+	} else {
+		rmsElm := Document.CreateElement("div")
+		rmsElm.ClassList().Add("ReelMentions")
+		rmsElm.SetInnerHTML(rmsHtml)
+		rmsElm.Style().SetTop("40%")
+		rmsElm.Style().SetRight("-350px")
+		controlElm.AppendChild(rmsElm)
+	}
+}
+
 func main() {
 	// receive messages from background script
 	Chrome.Runtime.Get("onMessage").Call("addListener", func(message interface{}) {
@@ -372,6 +412,11 @@ func main() {
 		if msg == "localhostIsAlive" {
 			isLocalhostAlive = true
 			println("localhost server is alive")
+			return
+		}
+		if strings.HasPrefix(msg, "reelmentions:") {
+			ProcessReelMentions(strings.TrimPrefix(msg, "reelmentions:"))
+			return
 		}
 	})
 
