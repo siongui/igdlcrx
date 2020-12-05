@@ -71,3 +71,15 @@ func GetStoryItem(id, storyurl string) (item instago.IGItem, err error) {
 	}
 	return
 }
+
+func GetStoryItemFromStoryUrl(storyurl string) (item instago.IGItem, err error) {
+	username := GetUsernameFromStoryUrl(storyurl)
+
+	id, err := GetIdFromUsername(username, storyurl)
+	if err != nil {
+		return
+	}
+
+	item, err = GetStoryItem(id, storyurl)
+	return
+}
