@@ -369,7 +369,7 @@ func ProcessReelMentions(rms string) {
 	for _, rm := range sss {
 		if rm != "" {
 			ss := strings.Split(rm, ":")
-			astr := fmt.Sprintf("<a href='https://www.instagram.com/stories/%s/'>%s (%s, %s)</a>", ss[1], ss[1], ss[2], ss[3])
+			astr := fmt.Sprintf("<a href='https://www.instagram.com/stories/%s/' target='_blank'>%s (%s, %s)</a>", ss[1], ss[1], ss[2], ss[3])
 			astr += "<br>"
 			rmsHtml += astr
 		}
