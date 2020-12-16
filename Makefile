@@ -37,6 +37,14 @@ userstory2layer: fmt
 	@echo "\033[92mDownload user $(id) unexpired stories and stories of reel mentions...\033[0m"
 	@go run localhost/userstory2layer.go -id=$(id)
 
+1dayrm:
+	@echo "\033[92mRemove files older than one day ...\033[0m"
+	@go run tool/1dayrm.go -root=Instagram -todir=${HOME}/Pictures/
+
+rmemptydir: fmt
+	@echo "\033[92mRemove empty dir ...\033[0m"
+	@go run tool/rmemptydir.go -root=Instagram
+
 fmt:
 	@echo "\033[92mGo fmt source code...\033[0m"
 	@go fmt extension/*.go
