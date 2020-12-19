@@ -7,6 +7,7 @@ export GOPATH=$(realpath ../paligo)
 export PATH := $(GOROOT)/bin:$(GOPATH)/bin:$(PATH)
 endif
 
+IGDIR=Instagram
 CRXDIR=$(CURDIR)/crx
 ZIPFILE=$(CRXDIR)/extension.zip
 LOCAL_LIBBGDIR=extension/libbackground
@@ -35,15 +36,19 @@ localhost: fmt
 
 userstory2layer: fmt
 	@echo "\033[92mDownload user $(id) unexpired stories and stories of reel mentions...\033[0m"
-	@go run localhost/userstory2layer.go -id=$(id)
+	@go run tool/userstory2layer.go -id=$(id)
+
+reeltray: fmt
+	@echo "\033[92mDownload stories in reels tray...\033[0m"
+	@go run tool/download.go -downloadtype=story -outputdir=${IGDIR}
 
 1dayrm:
 	@echo "\033[92mRemove files older than one day ...\033[0m"
-	@go run tool/1dayrm.go -root=Instagram -todir=${HOME}/Pictures/
+	@go run tool/1dayrm.go -root=${IGDIR} -todir=${HOME}/Pictures/
 
 rmemptydir: fmt
 	@echo "\033[92mRemove empty dir ...\033[0m"
-	@go run tool/rmemptydir.go -root=Instagram
+	@go run tool/rmemptydir.go -root=${IGDIR}
 
 fmt:
 	@echo "\033[92mGo fmt source code...\033[0m"
