@@ -17,7 +17,6 @@ func main() {
 	id := flag.String("id", "instagram", "id of instagram user")
 	flag.Parse()
 
-	fmt.Println("Download unexpired stories (last 24 hours) of the user and reel mentions")
-	mgr.DownloadUserStoryByNameLayer(*id, 2)
-	//mgr.DownloadUserStoryHighlightsByName(*id)
+	fmt.Println("Download unexpired stories (last 24 hours) of the user (no postlive)")
+	mgr.DownloadUserReelMediaLayer(*id, 2, 15)
 }
