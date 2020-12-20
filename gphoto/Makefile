@@ -12,7 +12,7 @@ IGDIR=../Instagram
 upload:
 	while [ true ] ; do \
 		gphotosuploader --upload ${IGDIR} --maxConcurrent 10 ; \
-		sleep 100 ; \
+		sleep 10 ; \
 	done
 
 zero:

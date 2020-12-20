@@ -3,5 +3,6 @@ pkg/
 src/
 crx/
 auth.json
+auth-clean.json
 Instagram/
 gphoto/uploaded.txt

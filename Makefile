@@ -42,6 +42,10 @@ reeltray: fmt
 	@echo "\033[92mDownload stories in reels tray...\033[0m"
 	@go run tool/download.go -downloadtype=story -outputdir=${IGDIR}
 
+allunexpired: fmt
+	@echo "\033[92mDownload all unexpired stories ...\033[0m"
+	@go run tool/unexpired.go
+
 1dayrm:
 	@echo "\033[92mRemove files older than one day ...\033[0m"
 	@go run tool/1dayrm.go -root=${IGDIR} -todir=${HOME}/Pictures/
