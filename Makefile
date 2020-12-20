@@ -42,6 +42,10 @@ userreelmedia: fmt
 	@echo "\033[92mDownload user unexpired stories ...\033[0m"
 	@go run tool/userreelmedia.go -id=$(id)
 
+txtdl: fmt
+	@echo "\033[92mDownload unexpired stories in users.txt ...\033[0m"
+	@go run tool/txtdl.go -f=users.txt
+
 reeltray: fmt
 	@echo "\033[92mDownload stories in reels tray...\033[0m"
 	@go run tool/download.go -downloadtype=story -outputdir=${IGDIR}
@@ -63,6 +67,7 @@ fmt:
 	@go fmt extension/*.go
 	@go fmt $(LOCAL_LIBBGDIR)/*.go
 	@go fmt localhost/*.go
+	@go fmt tool/*.go
 
 install:
 	@echo "\033[92mInstalling GopherJS ...\033[0m"

@@ -48,19 +48,19 @@ func moveFile(todir, path string, info os.FileInfo) {
 }
 
 func processFile(todir, path string, info os.FileInfo) {
-/*
-	// move files older than one day in name
-	if isOlderThanOneDay(getTimeFromFilename(info.Name())) {
-		moveFile(todir, path, info)
-		return
-	}
+	/*
+		// move files older than one day in name
+		if isOlderThanOneDay(getTimeFromFilename(info.Name())) {
+			moveFile(todir, path, info)
+			return
+		}
 
-	// move files with "-post-" in the filename
-	if strings.Contains(info.Name(), "-post-") {
-		moveFile(todir, path, info)
-		return
-	}
-*/
+		// move files with "-post-" in the filename
+		if strings.Contains(info.Name(), "-post-") {
+			moveFile(todir, path, info)
+			return
+		}
+	*/
 	// move files older than one day
 	if isOlderThanOneDay(info.ModTime()) {
 		moveFile(todir, path, info)

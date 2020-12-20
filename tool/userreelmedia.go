@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"flag"
+	"fmt"
 
 	"github.com/siongui/instago/download"
 )
@@ -18,5 +18,5 @@ func main() {
 	flag.Parse()
 
 	fmt.Println("Download unexpired stories (last 24 hours) of the user reel media")
-	mgr.DownloadUserStory(*id)
+	mgr.DownloadUserReelMedia(*id)
 }
