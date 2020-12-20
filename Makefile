@@ -38,6 +38,10 @@ userstory2layer: fmt
 	@echo "\033[92mDownload user $(id) unexpired stories and stories of reel mentions...\033[0m"
 	@go run tool/userstory2layer.go -id=$(id)
 
+userreelmedia: fmt
+	@echo "\033[92mDownload user unexpired stories ...\033[0m"
+	@go run tool/userreelmedia.go -id=$(id)
+
 reeltray: fmt
 	@echo "\033[92mDownload stories in reels tray...\033[0m"
 	@go run tool/download.go -downloadtype=story -outputdir=${IGDIR}
