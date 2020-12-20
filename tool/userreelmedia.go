@@ -14,7 +14,7 @@ func main() {
 		return
 	}
 
-	id := flag.Int64("id", 25025320, "id of instagram user")
+	id := flag.String("id", "25025320", "id of instagram user")
 	flag.Parse()
 
 	fmt.Println("Download unexpired stories (last 24 hours) of the user reel media")
