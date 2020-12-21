@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"strconv"
 
 	"github.com/siongui/instago/download"
 )
@@ -24,15 +23,5 @@ func main() {
 		return
 	}
 
-	for _, id := range ids {
-		n, err := strconv.ParseInt(id, 10, 64)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-
-		fmt.Println("Download unexpired stories (last 24 hours) of the user reel media", n)
-		mgr.DownloadUserReelMedia(n)
-		return
-	}
+	mgr.DownloadEmptyIds(ids)
 }
