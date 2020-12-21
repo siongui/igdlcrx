@@ -82,25 +82,29 @@ func GetStoryFilenameUrl(storyinfo string) (filename, mediaUrl string) {
 		return
 	}
 	username := sss[0]
-	//timestamp := sss[1]
+	timestamp := sss[1]
 	mediaUrl = sss[2]
-	storyurl := sss[3]
+	//storyurl := sss[3]
 
-	item, err := libbackground.GetStoryItemFromStoryUrl(storyurl)
-	if err != nil {
-		println(err.Error())
-		filename = ""
-		return
-	}
+	/*
+		item, err := libbackground.GetStoryItemFromStoryUrl(storyurl)
+		if err != nil {
+			println(err.Error())
+			filename = ""
+			return
+		}
 
-	filename = instago.BuildStoryFilename(mediaUrl, item.GetUsername(), item.GetUserId(), item.GetTimestamp())
+		filename = instago.BuildStoryFilename(mediaUrl, item.GetUsername(), item.GetUserId(), item.GetTimestamp())
 
-	var appendIdUsernames []instago.IGTaggedUser
-	for _, rm := range item.ReelMentions {
-		pair := instago.IGTaggedUser{Id: rm.GetUserId(), Username: rm.GetUsername()}
-		appendIdUsernames = append(appendIdUsernames, pair)
-	}
-	filename = instago.AppendTaggedUsersToFilename(username, item.GetUserId(), filename, appendIdUsernames)
+		var appendIdUsernames []instago.IGTaggedUser
+		for _, rm := range item.ReelMentions {
+			pair := instago.IGTaggedUser{Id: rm.GetUserId(), Username: rm.GetUsername()}
+			appendIdUsernames = append(appendIdUsernames, pair)
+		}
+		filename = instago.AppendTaggedUsersToFilename(username, item.GetUserId(), filename, appendIdUsernames)
+	*/
+
+	filename = username + "-" + timestamp + "-" + mediaUrl
 
 	// chrome.downloads does not allow ":" in filename
 	filename = Rename(filename)
