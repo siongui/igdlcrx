@@ -28,58 +28,82 @@ func isLatestReelMediaDownloaded(username string, latestReelMedia int64) bool {
 	return false
 }
 
+func DownloadEmptyIds(m *igdl.IGDownloadManager, emptyids []string) {
+	trays, err := m.GetMultipleReelsMedia(emptyids)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	for _, tray := range trays {
+		for _, item := range tray.Items {
+			username := tray.User.GetUsername()
+			id := tray.User.GetUserId()
+			_, err = igdl.GetStoryItem(item, username)
+			if err != nil {
+				igdl.PrintUsernameIdMsg(username, id, err)
+			}
+		}
+	}
+}
+
 func DownloadReelsTray(m *igdl.IGDownloadManager, interval1 int, ignoreMuted, verbose bool) {
-	for {
-		rt, err := m.GetReelsTray()
-		if err != nil {
-			log.Println(err)
+	rt, err := m.GetReelsTray()
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	go igdl.PrintLiveBroadcasts(rt.Broadcasts)
+
+	emptyids := []string{}
+	for _, tray := range rt.Trays {
+		username := tray.GetUsername()
+		id := tray.Id
+		//items := tray.GetItems()
+
+		if ignoreMuted && tray.Muted {
+			if verbose {
+				igdl.PrintUsernameIdMsg(username, id, " is muted && ignoreMuted set. no download")
+			}
 			continue
 		}
 
-		go igdl.PrintLiveBroadcasts(rt.Broadcasts)
-
-		//for index, tray := range rt.Trays {
-		for _, tray := range rt.Trays {
-			username := tray.GetUsername()
-			id := tray.Id
-			//items := tray.GetItems()
-
-			if ignoreMuted && tray.Muted {
-				if verbose {
-					igdl.PrintUsernameIdMsg(username, id, " is muted && ignoreMuted set. no download")
-				}
-				continue
-			}
-
-			if isLatestReelMediaDownloaded(username, tray.LatestReelMedia) {
-				if verbose {
-					igdl.PrintUsernameIdMsg(username, id, " all downloaded")
-				}
-				continue
-			}
-
-			if tray.HasBestiesMedia {
-				igdl.PrintUsernameIdMsg(username, id, "has close friend (besties) story item(s)")
-			}
-
+		if isLatestReelMediaDownloaded(username, tray.LatestReelMedia) {
 			if verbose {
-				igdl.UsernameIdColorPrint(username, id)
-				fmt.Println(" has undownloaded items")
+				igdl.PrintUsernameIdMsg(username, id, " all downloaded")
 			}
-
-			items := tray.GetItems()
-			if len(items) > 0 {
-				for _, item := range items {
-					_, err = igdl.GetStoryItem(item, username)
-					if err != nil {
-						igdl.PrintUsernameIdMsg(username, id, err)
-					}
-				}
-			}
+			continue
 		}
 
-		igdl.PrintMsgSleep(interval1, "DownloadStoryAndPostLiveForever: ")
+		if tray.HasBestiesMedia {
+			igdl.PrintUsernameIdMsg(username, id, "has close friend (besties) story item(s)")
+		}
+
+		if verbose {
+			igdl.UsernameIdColorPrint(username, id)
+			fmt.Println(" has undownloaded items")
+		}
+
+		items := tray.GetItems()
+		if len(items) > 0 {
+			for _, item := range items {
+				_, err = igdl.GetStoryItem(item, username)
+				if err != nil {
+					igdl.PrintUsernameIdMsg(username, id, err)
+				}
+			}
+		} else {
+			emptyids = append(emptyids, strconv.FormatInt(id, 10))
+		}
+
+		if len(emptyids) > 20 {
+			break
+		}
 	}
+
+	DownloadEmptyIds(m, emptyids)
+	//	igdl.PrintMsgSleep(interval1, "DownloadStoryAndPostLiveForever: ")
 }
 
 func main() {
