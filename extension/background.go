@@ -315,24 +315,26 @@ func main() {
 		}
 	*/
 
-	// get web url of reels tray
-	rturl, err := mgr.GetGetWebFeedReelsTrayUrl()
-	if err != nil {
-		println(err.Error())
-		return
-	} else {
-		println(rturl)
-	}
+	/*
+		// get web url of reels tray
+		rturl, err := mgr.GetGetWebFeedReelsTrayUrl()
+		if err != nil {
+			println(err.Error())
+			return
+		} else {
+			println(rturl)
+		}
 
-	// get web reels tray
-	rms, err := mgr.GetWebFeedReelsTray(rturl)
-	if err != nil {
-		println(err.Error())
-		return
-	}
+		// get web reels tray
+		rms, err := mgr.GetWebFeedReelsTray(rturl)
+		if err != nil {
+			println(err.Error())
+			return
+		}
 
-	// set id - username pairs via data of reels tray
-	for _, rm := range rms {
-		libbackground.SetUsernameId(rm.User.Username, rm.User.Id)
-	}
+		// set id - username pairs via data of reels tray
+		for _, rm := range rms {
+			libbackground.SetUsernameId(rm.User.Username, rm.User.Id)
+		}
+	*/
 }
