@@ -23,5 +23,9 @@ func main() {
 		return
 	}
 
-	mgr.DownloadEmptyIds(ids)
+	err = mgr.DownloadStoryOfMultipleId(ids)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 }
