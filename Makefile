@@ -38,9 +38,9 @@ localhost: fmt
 	@echo "\033[92mDownload user $(id) unexpired stories and stories of reel mentions...\033[0m"
 	@go run tool/userstory2layer.go -id=$(id)
 
-userreelmedia: fmt
+userstory: fmt
 	@echo "\033[92mDownload user unexpired stories ...\033[0m"
-	@go run tool/userreelmedia.go -id=$(id)
+	@go run tool/userstory.go -id=$(id)
 
 txtdl: fmt
 	@echo "\033[92mDownload unexpired stories in users.txt ...\033[0m"

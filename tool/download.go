@@ -37,7 +37,8 @@ func main() {
 		//mgr.DownloadStoryForever(90, 100, true, true)
 		//mgr.DownloadStoryForeverViaCleanAccount(90, 60, true, true)
 		//mgr.TwoAccountDownloadStoryForever(90, 60, 60, true, true)
-		mgr.DownloadStoryForeverPublicReelMentions(90, 60, true, true)
+		//mgr.DownloadStoryForeverPublicReelMentions(90, 60, true, true)
+		mgr.TwoAccountDownloadStoryForeverSecondAccountViaStoryAPI(90, 8, 60, true, true)
 	case "highlight":
 		fmt.Println("Download all story highlights of all following users")
 		mgr.DownloadStoryHighlights()
