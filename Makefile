@@ -42,6 +42,10 @@ userstory: fmt
 	@echo "\033[92mDownload user unexpired stories ...\033[0m"
 	@go run tool/userstory.go -id=$(id)
 
+allpost: fmt
+	@echo "\033[92mDownload all user posts ...\033[0m"
+	@go run tool/allposts.go -id=$(id)
+
 txtdl: fmt
 	@echo "\033[92mDownload unexpired stories in users.txt ...\033[0m"
 	@go run tool/txtdl.go -f=users.txt
