@@ -50,7 +50,11 @@ txtdl: fmt
 	@echo "\033[92mDownload unexpired stories in users.txt ...\033[0m"
 	@go run tool/txtdl.go -f=users.txt
 
-reeltray: fmt
+dltxt: fmt
+	@echo "\033[92mDownload unexpired stories in users.txt ...\033[0m"
+	@go run tool/dltxt.go -f=users.txt
+
+reelstray: fmt
 	@echo "\033[92mDownload stories in reels tray...\033[0m"
 	@go run tool/download.go -downloadtype=story -outputdir=${IGDIR}
 
