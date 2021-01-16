@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"strconv"
 	"strings"
 	"time"
 
@@ -28,16 +27,8 @@ func main() {
 
 	for _, id := range ids {
 		id = strings.TrimSpace(id)
-		i, err := strconv.ParseInt(id, 10, 64)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
 
-		//fmt.Println(i)
-		//continue
-
-		err = mgr.DownloadUserStoryPostlive(i)
+		err = mgr.DownloadUserStoryLayer(id, 2, 12)
 		if err != nil {
 			fmt.Println(err)
 			return
