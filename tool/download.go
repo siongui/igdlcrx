@@ -14,13 +14,11 @@ func main() {
 		return
 	}
 
-	/*
-		err = mgr.LoadCleanDownloadManager("auth-clean.json")
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-	*/
+	err = mgr.LoadCleanDownloadManager("auth-clean2.json")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	typ := flag.String("downloadtype", "timeline", "Download 1) timeline 2) story 3) highlight 4) saved posts")
 	outputdir := flag.String("outputdir", "Instagram", "dir to save post and story")
@@ -36,11 +34,8 @@ func main() {
 		mgr.DownloadTimeline(1)
 	case "story":
 		fmt.Println("Download Stories and Post lives")
-		//mgr.DownloadStoryForever(90, 100, true, true)
-		//mgr.DownloadStoryForeverViaCleanAccount(90, 60, true, true)
-		//mgr.TwoAccountDownloadStoryForever(90, 60, 60, true, true)
-		mgr.DownloadStoryForeverPublicReelMentions(90, 60, true, true)
-		//mgr.TwoAccountDownloadStoryForeverSecondAccountViaStoryAPI(90, 12, 60, true, true)
+		//mgr.DownloadStoryForeverPublicReelMentions(90, 60, true, true)
+		mgr.TwoAccountDownloadStoryForeverSecondAccountViaStoryAPI(90, 12, 60, true, true)
 	case "highlight":
 		fmt.Println("Download all story highlights of all following users")
 		mgr.DownloadStoryHighlights()

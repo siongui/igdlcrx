@@ -28,7 +28,7 @@ func main() {
 	for _, id := range ids {
 		id = strings.TrimSpace(id)
 
-		err = mgr.DownloadUserStoryLayer(id, 2, 12)
+		err = mgr.DownloadUserStory(id)
 		if err != nil {
 			fmt.Println(err)
 			return
