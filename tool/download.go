@@ -33,9 +33,11 @@ func main() {
 		fmt.Println("Download timeline")
 		mgr.DownloadTimeline(1)
 	case "story":
-		fmt.Println("Download Stories and Post lives")
-		//mgr.DownloadStoryForeverPublicReelMentions(90, 60, true, true)
+		fmt.Println("Download Stories and Post lives (two account)")
 		mgr.TwoAccountDownloadStoryForeverSecondAccountViaStoryAPI(90, 12, 60, true, true)
+	case "story2":
+		fmt.Println("Download Stories and Post lives (main account)")
+		mgr.DownloadStoryForeverPublicReelMentions(90, 60, true, true)
 	case "highlight":
 		fmt.Println("Download all story highlights of all following users")
 		mgr.DownloadStoryHighlights()
