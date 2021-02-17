@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	mgr, err := igdl.NewInstagramDownloadManager("auth-clean2.json")
+	mgr, err := igdl.NewInstagramDownloadManager("auth-clean.json")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -21,4 +21,5 @@ func main() {
 	// Given username, the following method will download all posts of the
 	// user.
 	mgr.DownloadAllPostsNoLoginIfPossible(*id)
+	//mgr.DownloadPost(*id)
 }
