@@ -7,6 +7,7 @@ export GOPATH=$(realpath ../paligo)
 export PATH := $(GOROOT)/bin:$(GOPATH)/bin:$(PATH)
 endif
 
+export GO111MODULE=off
 IGDIR=Instagram
 CRXDIR=$(CURDIR)/crx
 ZIPFILE=$(CRXDIR)/extension.zip
@@ -88,8 +89,8 @@ install: install_instago
 	@#go get -u github.com/fabioberger/chrome
 	@echo "\033[92mInstalling github.com/siongui/godom ...\033[0m"
 	go get -u github.com/siongui/godom
-	@echo "\033[92mInstalling github.com/extension/libbackground ...\033[0m"
-	go get -u github.com/siongui/igdlcrx/extension/libbackground
+	@#echo "\033[92mInstalling github.com/extension/libbackground ...\033[0m"
+	#go get -u github.com/siongui/igdlcrx/extension/libbackground
 
 install_instago:
 	@echo "\033[92mInstalling github.com/siongui/instago ...\033[0m"
