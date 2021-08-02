@@ -51,7 +51,7 @@ func DoFacebookPhotoAction(url string) {
 	src := imgElm.GetAttribute("src")
 	//println(src)
 
-	userElm, ok := GetElementInElement(Document, `div.buofh1pr > div > div:nth-child(1) > span > div > h2 > span > div > a`)
+	userElm, ok := GetElementInElement(Document, `div.buofh1pr > div > div:nth-child(1) > span > div > h2 > span > span > a`)
 	if !ok {
 		println("cannot find user element")
 		return
