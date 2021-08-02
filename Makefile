@@ -7,7 +7,7 @@ export GOPATH=$(realpath ../paligo)
 export PATH := $(GOROOT)/bin:$(GOPATH)/bin:$(PATH)
 endif
 
-export GO111MODULE=off
+#export GO111MODULE=off
 IGDIR=Instagram
 CRXDIR=$(CURDIR)/crx
 ZIPFILE=$(CRXDIR)/extension.zip
@@ -85,6 +85,13 @@ fmt:
 	@go fmt $(LOCAL_LIBBGDIR)/*.go
 	@go fmt localhost/*.go
 	@go fmt tool/*.go
+
+modinit:
+	cd extension; go mod init github.com/siongui/igdlcrx/extension
+
+modtidy:
+	cd extension; go list -m all
+	cd extension; go mod tidy
 
 install: install_instago
 	@echo "\033[92mInstalling GopherJS ...\033[0m"
