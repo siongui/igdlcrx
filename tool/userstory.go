@@ -8,15 +8,25 @@ import (
 )
 
 func main() {
-	mgr, err := igdl.NewInstagramDownloadManager("auth-clean.json")
+	id := flag.String("id", "25025320", "id of instagram user")
+	clean := flag.Bool("clean", true, "if use clean account")
+	flag.Parse()
+
+	accountJson := "auth.json"
+	if *clean {
+		accountJson = "auth-clean.json"
+	}
+
+	mgr, err := igdl.NewInstagramDownloadManager(accountJson)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	id := flag.String("id", "25025320", "id of instagram user")
-	flag.Parse()
-
-	fmt.Println("Download unexpired stories (last 24 hours) of the user (no postlive)")
+	if *clean {
+		fmt.Println("Download unexpired stories (last 24 hours) of the user (no postlive) using clean account")
+	} else {
+		fmt.Println("Download unexpired stories (last 24 hours) of the user (no postlive)")
+	}
 	mgr.DownloadUserStory(*id)
 }
