@@ -39,14 +39,6 @@ localhost: fmt
 	@echo "\033[92mDownload user $(id) unexpired stories and stories of reel mentions...\033[0m"
 	@go run tool/userstory2layer.go -id=$(id)
 
-cleanstory: fmt
-	@echo "\033[92mDownload user unexpired stories using clean account ...\033[0m"
-	@go run tool/userstory.go -clean=true -id=$(id)
-
-userstory: fmt
-	@echo "\033[92mDownload user unexpired stories ...\033[0m"
-	@go run tool/userstory.go -clean=false -id=$(id)
-
 allpost: fmt
 	@echo "\033[92mDownload all user posts ...\033[0m"
 	@go run tool/allposts.go -id=$(id)
@@ -84,7 +76,7 @@ fmt:
 	@go fmt extension/*.go
 	@go fmt $(LOCAL_LIBBGDIR)/*.go
 	@go fmt localhost/*.go
-	@go fmt tool/*.go
+	@cd tool; make fmt
 
 modinit:
 	cd extension; go mod init github.com/siongui/igdlcrx/extension
