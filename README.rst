@@ -30,7 +30,7 @@ written in Go_, compiled to JavaScript via GopherJS_.
 Tested on:
 
   - `Ubuntu 20.04`_
-  - `Go 1.12.17`_
+  - `Go 1.16.5`_
 
 Download extension.zip_ and install the extracted directory using
 `chrome extension developer mode`_.

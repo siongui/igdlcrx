@@ -7,7 +7,7 @@ export GOPATH=$(CURDIR)
 export PATH := $(GOROOT)/bin:$(GOPATH)/bin:$(PATH)
 endif
 
-export GO111MODULE=off
+#export GO111MODULE=off
 IGDIR=Instagram
 CRXDIR=$(CURDIR)/crx
 ZIPFILE=$(CRXDIR)/extension.zip
@@ -93,10 +93,8 @@ modtidy:
 	cd extension; go list -m all
 	cd extension; go mod tidy
 
-install: install_instago
+install: install_instago install_gopherjs
 	go version
-	@echo "\033[92mInstalling GopherJS ...\033[0m"
-	go get -u github.com/gopherjs/gopherjs
 	@#echo "\033[92mInstalling GopherJS Bindings for Chrome ...\033[0m"
 	@#go get -u github.com/fabioberger/chrome
 	@echo "\033[92mInstalling github.com/siongui/godom ...\033[0m"
@@ -107,3 +105,7 @@ install: install_instago
 install_instago:
 	@echo "\033[92mInstalling github.com/siongui/instago ...\033[0m"
 	go get -u github.com/siongui/instago/download
+
+install_gopherjs:
+	@echo "\033[92mInstalling GopherJS ...\033[0m"
+	go get -u github.com/gopherjs/gopherjs
