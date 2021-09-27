@@ -8,9 +8,6 @@ Instagram Download Chrome Extension
 .. image:: https://godoc.org/github.com/siongui/igdlcrx?status.svg
    :target: https://godoc.org/github.com/siongui/igdlcrx
 
-.. .. image:: https://api.travis-ci.org/siongui/igdlcrx.png?branch=master
-   :target: https://travis-ci.org/siongui/igdlcrx
-
 .. image:: https://github.com/siongui/igdlcrx/workflows/GopherJS%20Chome%20Extension%20CI/badge.svg
     :target: https://github.com/siongui/igdlcrx/blob/master/.github/workflows/gopherjs.yml
 
@@ -30,7 +27,7 @@ written in Go_, compiled to JavaScript via GopherJS_.
 Tested on:
 
   - `Ubuntu 20.04`_
-  - `Go 1.16.5`_
+  - `Go 1.17.1`_
 
 Download extension.zip_ and install the extracted directory using
 `chrome extension developer mode`_.
@@ -60,7 +57,7 @@ References
 .. _JavaScript: https://www.google.com/search?q=JavaScript
 .. _GopherJS: http://www.gopherjs.org/
 .. _Ubuntu 20.04: https://releases.ubuntu.com/20.04/
-.. _Go 1.12.17: https://golang.org/dl/
+.. _Go 1.17.1: https://golang.org/dl/
 .. _extension.zip: https://siongui.github.io/igdlcrx/extension.zip
 .. _chrome extension developer mode: https://www.google.com/search?q=chrome+extension+developer+mode
 .. _UNLICENSE: https://unlicense.org/
