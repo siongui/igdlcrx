@@ -1,6 +1,5 @@
-bin/
-pkg/
-src/
+gphoto/bin/
+gphoto/pkg/
 crx/
 Instagram/
 gphoto/uploaded.txt

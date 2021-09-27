@@ -1,9 +1,9 @@
 # cannot use relative path in GOROOT, otherwise 6g not found. For example,
 #   export GOROOT=../go  (=> 6g not found)
 # it is also not allowed to use relative path in GOPATH
-ifndef GITHUB_ACTIONS
-export GOROOT=$(realpath ../paligo/go)
-export GOPATH=$(CURDIR)
+ifndef GOROOT
+export GOROOT=$(realpath ../go)
+export GOPATH=$(CURDIR)/gphoto
 export PATH := $(GOROOT)/bin:$(GOPATH)/bin:$(PATH)
 endif
 
@@ -11,8 +11,6 @@ endif
 IGDIR=Instagram
 CRXDIR=$(CURDIR)/crx
 ZIPFILE=$(CRXDIR)/extension.zip
-LOCAL_LIBBGDIR=extension/libbackground
-LIBBGDIR=$(GOPATH)/src/github.com/siongui/igdlcrx/$(LOCAL_LIBBGDIR)
 
 build: fmt
 	@echo "\033[92mCompiling Go to JavaScript ...\033[0m"
@@ -23,10 +21,6 @@ build: fmt
 	cd extension; gopherjs build background.go chrome.go -o $(CRXDIR)/background.js
 	cd extension; gopherjs build content.go chrome.go -o $(CRXDIR)/content.js
 	cd extension; gopherjs build contentfb.go chrome.go -o $(CRXDIR)/contentfb.js
-
-copylocallib:
-	[ -d $(LIBBGDIR) ] || mkdir -p $(LIBBGDIR)
-	cp $(LOCAL_LIBBGDIR)/*.go $(LIBBGDIR)
 
 pack: build
 	cd $(CRXDIR); zip -r extension.zip .
@@ -63,6 +57,14 @@ allunexpired: fmt
 	@echo "\033[92mDownload all unexpired stories ...\033[0m"
 	@go run tool/unexpired.go
 
+userstory: fmt
+	@echo "\033[92mDownload user unexpired stories ...\033[0m"
+	@go run tool/userstory.go -clean=false -id=$(id)
+
+cleanstory: fmt
+	@echo "\033[92mDownload user unexpired stories using clean account ...\033[0m"
+	@go run tool/userstory.go -clean=true -id=$(id)
+
 1dayrm:
 	@echo "\033[92mRemove files older than one day ...\033[0m"
 	@go run tool/1dayrm.go -root=${IGDIR} -todir=${HOME}/Pictures/
@@ -74,29 +76,15 @@ rmemptydir: fmt
 fmt:
 	@echo "\033[92mGo fmt source code...\033[0m"
 	@go fmt extension/*.go
-	@go fmt $(LOCAL_LIBBGDIR)/*.go
+	@go fmt extension/libbackground/*.go
 	@go fmt localhost/*.go
-	@cd tool; make fmt
 
 modinit:
-	cd extension; go mod init github.com/siongui/igdlcrx/extension
+	go mod init github.com/siongui/igdlcrx
 
 modtidy:
-	cd extension; go list -m all
-	cd extension; go mod tidy
-
-install: install_instago install_gopherjs
-	go version
-	@#echo "\033[92mInstalling GopherJS Bindings for Chrome ...\033[0m"
-	@#go get -u github.com/fabioberger/chrome
-	@echo "\033[92mInstalling github.com/siongui/godom ...\033[0m"
-	go get -u github.com/siongui/godom
-	@echo "\033[92mInstalling github.com/extension/libbackground ...\033[0m"
-	go get -u github.com/siongui/igdlcrx/extension/libbackground
-
-install_instago:
-	@echo "\033[92mInstalling github.com/siongui/instago ...\033[0m"
-	go get -u github.com/siongui/instago/download
+	#go list -m all
+	go mod tidy
 
 install_gopherjs:
 	@echo "\033[92mInstalling GopherJS ...\033[0m"
