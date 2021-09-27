@@ -14,7 +14,7 @@ jobs:
         persist-credentials: false
     - uses: actions/setup-go@v2
       with:
-        go-version: '1.16.5'
+        go-version: '1.17.1'
     - name: Install dependencies
       run: |
         make install_gopherjs
