@@ -2,12 +2,15 @@ module github.com/siongui/igdlcrx
 
 go 1.17
 
-require github.com/siongui/instago v0.0.0-20210921235610-e7414e1b37fd
+require (
+	github.com/gopherjs/gopherjs v0.0.0-20211004101933-6b77bd30416d
+	github.com/siongui/godom v0.0.0-20200920152407-31a6de96fdf6
+	github.com/siongui/instago v0.0.0-20210921235610-e7414e1b37fd
+)
 
 require (
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
-	github.com/gopherjs/gopherjs v0.0.0-20210923143318-357ed63a84fb // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/mattn/go-colorable v0.1.9 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
@@ -18,7 +21,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
-	golang.org/x/sys v0.0.0-20210927094055-39ccf1dd6fa6 // indirect
-	golang.org/x/term v0.0.0-20210916214954-140adaaadfaf // indirect
-	golang.org/x/tools v0.1.6 // indirect
+	golang.org/x/sys v0.0.0-20211007075335-d3039528d8ac // indirect
+	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211 // indirect
+	golang.org/x/tools v0.1.7 // indirect
 )
