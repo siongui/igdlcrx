@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/gopherjs/gopherjs v0.0.0-20211004101933-6b77bd30416d
 	github.com/siongui/godom v0.0.0-20200920152407-31a6de96fdf6
-	github.com/siongui/instago v0.0.0-20210921235610-e7414e1b37fd
+	github.com/siongui/instago v0.0.0-20211213184405-8fe67e5a01cf
 )
 
 require (

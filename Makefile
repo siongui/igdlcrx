@@ -73,11 +73,16 @@ rmemptydir: fmt
 	@echo "\033[92mRemove empty dir ...\033[0m"
 	@go run tool/rmemptydir.go -root=${IGDIR}
 
+savedcollection: fmt
+	@echo "\033[92mDownload saved posts in collection ...\033[0m"
+	@go run tool/savedcollection.go -collection=Download
+
 fmt:
 	@echo "\033[92mGo fmt source code...\033[0m"
 	@go fmt extension/*.go
 	@go fmt extension/libbackground/*.go
 	@go fmt localhost/*.go
+	@go fmt tool/*.go
 
 modinit:
 	go mod init github.com/siongui/igdlcrx
