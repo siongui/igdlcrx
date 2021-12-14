@@ -65,9 +65,13 @@ cleanstory: fmt
 	@echo "\033[92mDownload user unexpired stories using clean account ...\033[0m"
 	@go run tool/userstory.go -clean=true -id=$(id)
 
-1dayrm:
+1dayrm: fmt
 	@echo "\033[92mRemove files older than one day ...\033[0m"
 	@go run tool/1dayrm.go -root=${IGDIR} -todir=${HOME}/Pictures/
+
+zero: fmt
+	@echo "\033[92mRemove and re-download zero length files ...\033[0m"
+	@go run tool/zero.go -root=${IGDIR} -todir=${HOME}/Pictures/
 
 rmemptydir: fmt
 	@echo "\033[92mRemove empty dir ...\033[0m"
