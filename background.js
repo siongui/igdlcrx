@@ -153208,7 +153208,7 @@ $packages["github.com/siongui/instago"] = (function() {
 	removeLunar = function(b) {
 		var $24r, _r, _r$1, b, pattern, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $24r = $f.$24r; _r = $f._r; _r$1 = $f._r$1; b = $f.b; pattern = $f.pattern; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		_r = regexp.MustCompile("{\"id\":\"election:lunar_new_year:.+?\"is_cacheable\":true},"); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_r = regexp.MustCompile("{\"id\":\"election:lunar_new_year:.+?\"ring_spec\":null},"); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		pattern = _r;
 		_r$1 = pattern.ReplaceAllString(($bytesToString(b)), ""); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 		$24r = (new sliceType($stringToBytes(_r$1)));
